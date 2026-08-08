@@ -151,15 +151,39 @@ const FormPPDB = ({ setCurrentPage, siteData }) => {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setStatus('loading');
-    // Simulasi pengiriman API
-    setTimeout(() => {
-      setStatus('success');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }, 2000);
-  };
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzwt701-N5EVbjmuI7WiwTEoupeKAiSD0AWf_RMKVJ0d6HqilcCXCze64JHuPin3kV3VQ/exec";
+
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setStatus('loading');
+
+  try {
+    // Format data menjadi URL Search Params untuk menghindari blokir CORS
+    const formDataPayload = new URLSearchParams();
+    Object.keys(formData).forEach((key) => {
+      formDataPayload.append(key, formData[key]);
+    });
+
+    await fetch(SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors', // Penting agar request tidak diblokir browser
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: formDataPayload.toString(),
+    });
+
+    // Karena mode no-cors tidak mengembalikan response JSON,
+    // alur dianggap berhasil jika tidak terjadi network error
+    setStatus('success');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  } catch (error) {
+    console.error("Error submitting form:", error);
+    alert("Terjadi kesalahan koneksi. Pastikan koneksi internet stabil.");
+    setStatus('idle');
+  }
+};
 
   return (
     <div className="min-h-screen bg-slate-50 pt-32 pb-24 px-4 sm:px-6 relative overflow-hidden">
@@ -448,53 +472,6 @@ const AdminDashboard = ({ siteData, setSiteData, showToast, onLogout }) => {
     setSiteData(localData);
     showToast('Perubahan berhasil disimpan!');
   };
-
-  // Tambahkan di dalam komponen utama sebelum 'return'
-
-const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwrOR2iUENmq2avdLWwexeO50Djt9sLaavaxpdz4YLcRym5aSCvpjyj2m3bbPIED3aYaw/exec";
-
-// 1. Fungsi untuk MENGAMBIL data dari Database saat web dimuat
-useEffect(() => {
-  const fetchData = async () => {
-    try {
-      const response = await fetch(APPS_SCRIPT_URL);
-      const data = await response.json();
-      
-      if (data && data.sekolah) {
-        setSiteData(data); // Mengganti state dengan data dari database
-      }
-    } catch (error) {
-      console.error("Gagal mengambil data dari server", error);
-    }
-  };
-  
-  fetchData();
-}, []);
-
-// 2. Modifikasi fungsi handleSave di dalam komponen Admin
-const handleSaveToDatabase = async () => {
-  try {
-    // Ubah status tombol menjadi loading jika perlu
-    alert("Menyimpan ke database... Mohon tunggu.");
-    
-    const response = await fetch(APPS_SCRIPT_URL, {
-      method: "POST",
-      body: JSON.stringify(siteData), // Mengirim seluruh state web
-      headers: {
-        "Content-Type": "text/plain;charset=utf-8", 
-        // Menggunakan text/plain untuk menghindari isu CORS preflight di Apps Script
-      },
-    });
-
-    const result = await response.json();
-    if (result.status === "success") {
-      alert("Yeay! Website berhasil diperbarui & disimpan permanen!");
-      setIsAdmin(false); // Keluar dari mode admin
-    }
-  } catch (error) {
-    alert("Gagal menyimpan data: " + error.message);
-  }
-};
 
   return (
     <div className="min-h-screen bg-slate-50 pt-32 pb-24 px-4 sm:px-6">
@@ -839,15 +816,23 @@ export default function App() {
     }
   };
 
-  const handleMenuClick = (id) => {
-    if (currentPage !== 'home') {
-      setCurrentPage('home');
-      setTimeout(() => scrollToId(id), 100);
-    } else {
-      scrollToId(id);
-    }
+  const handleMenuClick = (item) => {
+  // Jika menu memiliki 'url', buka link microsite di tab baru
+  if (item.url) {
+    window.open(item.url, '_blank', 'noopener,noreferrer');
     setIsMobileMenuOpen(false);
-  };
+    return;
+  }
+
+  // Logika scroll untuk menu biasa
+  if (currentPage !== 'home') {
+    setCurrentPage('home');
+    setTimeout(() => scrollToId(item.id), 100);
+  } else {
+    scrollToId(item.id);
+  }
+  setIsMobileMenuOpen(false);
+};
 
   const scrollToId = (id) => {
     if (id === 'beranda') {
@@ -876,12 +861,13 @@ export default function App() {
   };
 
   const MENU_ITEMS = [
-    { label: 'Beranda', id: 'beranda' },
-    { label: 'Profil', id: 'profil' },
-    { label: 'Guru', id: 'guru' },
-    { label: 'Fasilitas', id: 'fasilitas' },
-    { label: 'Berita', id: 'berita' },
-  ];
+  { label: 'Beranda', id: 'beranda' },
+  { label: 'Profil', id: 'profil' },
+  // Tambahkan url microsite Anda di sini
+  { label: 'Microsite', id: 'microsite', url: 'https://s.id/smp_afar' }, 
+  { label: 'Fasilitas', id: 'fasilitas' },
+  { label: 'Berita', id: 'berita' },
+];
 
   return (
     <div className="min-h-screen bg-slate-50 font-sans text-slate-900 selection:bg-[#e1ce8c]/50 selection:text-[#00664f]">
@@ -925,7 +911,7 @@ export default function App() {
             {MENU_ITEMS.map((item) => (
               <button 
                 key={item.id}
-                onClick={() => handleMenuClick(item.id)} 
+                onClick={() => handleMenuClick(item)} 
                 className={`text-sm font-semibold px-4 py-2 rounded-full transition-all duration-300 hover:text-[#e1ce8c] ${
                   isScrolled || currentPage !== 'home' 
                     ? 'text-slate-600 hover:bg-slate-100' 
@@ -1021,7 +1007,7 @@ export default function App() {
 
                 <div className="hidden md:block relative h-[600px] w-full">
                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-[28rem] rounded-[2rem] overflow-hidden border-8 border-white/10 shadow-2xl animate-float z-20">
-                     <img src="https://images.unsplash.com/photo-1577896851231-70ef18881754?q=80&w=800" alt="Students" className="w-full h-full object-cover" />
+                     <img src="/images/foto-siswa.jpeg" alt="Students" className="w-full h-full object-cover" />
                      <div className="absolute inset-0 bg-gradient-to-t from-[#00664f]/80 to-transparent"></div>
                    </div>
                    
