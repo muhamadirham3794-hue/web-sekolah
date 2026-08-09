@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/web-sekolah/static/css/main.1b58541c.css",
-    "main.js": "/web-sekolah/static/js/main.76a6c9f1.js",
+    "main.js": "/web-sekolah/static/js/main.ed0991fd.js",
     "index.html": "/web-sekolah/index.html",
     "main.1b58541c.css.map": "/web-sekolah/static/css/main.1b58541c.css.map",
-    "main.76a6c9f1.js.map": "/web-sekolah/static/js/main.76a6c9f1.js.map"
+    "main.ed0991fd.js.map": "/web-sekolah/static/js/main.ed0991fd.js.map"
   },
   "entrypoints": [
     "static/css/main.1b58541c.css",
-    "static/js/main.76a6c9f1.js"
+    "static/js/main.ed0991fd.js"
   ]
 }
