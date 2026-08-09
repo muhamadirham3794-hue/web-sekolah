@@ -151,7 +151,7 @@ const FormPPDB = ({ setCurrentPage, siteData }) => {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzwt701-N5EVbjmuI7WiwTEoupeKAiSD0AWf_RMKVJ0d6HqilcCXCze64JHuPin3kV3VQ/exec";
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzobjGYJQkX_T692ATKLShObWiwSJGOOinOmEeat-N4nmHK-8jQlk5VYdnuUd1fmJDxkw/exec";
 
 const handleSubmit = async (e) => {
   e.preventDefault();
@@ -375,13 +375,13 @@ const handleSubmit = async (e) => {
 
 const INITIAL_SITE_DATA = {
   sekolah: {
-    nama: "SMP AL-FATHONAH",
-    npsn: "20227245",
+    nama: "SMP AL-FATHONAH ARJASARI",
+    npsn: "70050373",
     tahunPelajaran: "2026/2027",
-    lokasi: "Arjasari - Tasikmalaya",
-    alamat: "Jl. Arjasari, Leuwisari, Kab. Tasikmalaya, Jawa Barat, 46464",
-    telepon: "(0265) 1234567",
-    email: "info@smpalfathonah.sch.id",
+    lokasi: "Leuwisari - Tasikmalaya",
+    alamat: "Jl. Arjasari No. 40 RT. 06 RW. 02, Leuwisari, Kab. Tasikmalaya, Jawa Barat, 46464",
+    telepon: "(+62) 822-6166-8868",
+    email: "smp.alfathonah@gmail.com",
     logo: "",
     akreditasi: "Predikat A",
     totalSiswa: "500+ Aktif"
@@ -469,9 +469,16 @@ const AdminDashboard = ({ siteData, setSiteData, showToast, onLogout }) => {
   };
 
   const handleSave = () => {
+  try {
     setSiteData(localData);
+    // Tambahkan baris ini untuk menyimpan ke localStorage
+    localStorage.setItem('siteData', JSON.stringify(localData));
     showToast('Perubahan berhasil disimpan!');
-  };
+  } catch (error) {
+    console.error(error);
+    showToast('Gagal menyimpan! Ukuran data/gambar terlalu besar.');
+  }
+};
 
   return (
     <div className="min-h-screen bg-slate-50 pt-32 pb-24 px-4 sm:px-6">
@@ -766,7 +773,10 @@ export default function App() {
   const [selectedNews, setSelectedNews] = useState(null);
   
   // State Dinamis CMS
-  const [siteData, setSiteData] = useState(INITIAL_SITE_DATA);
+  const [siteData, setSiteData] = useState(() => {
+  const savedData = localStorage.getItem('siteData');
+  return savedData ? JSON.parse(savedData) : INITIAL_SITE_DATA;
+});
   const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(false);
   const [showAdminLogin, setShowAdminLogin] = useState(false);
   const [adminPassword, setAdminPassword] = useState('');
@@ -1007,7 +1017,7 @@ export default function App() {
 
                 <div className="hidden md:block relative h-[600px] w-full">
                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-[28rem] rounded-[2rem] overflow-hidden border-8 border-white/10 shadow-2xl animate-float z-20">
-                     <img src="/images/foto-siswa.jpeg" alt="Students" className="w-full h-full object-cover" />
+                     <img src={`${process.env.PUBLIC_URL}/foto-siswa.jpeg`} alt="Students" className="w-full h-full object-cover" />
                      <div className="absolute inset-0 bg-gradient-to-t from-[#00664f]/80 to-transparent"></div>
                    </div>
                    
@@ -1079,7 +1089,7 @@ export default function App() {
 
             <section className="py-24 relative bg-white border-t border-slate-100">
               <div className="max-w-7xl mx-auto px-4 sm:px-6">
-                <div className="text-center mb-16 max-w-2xl mx-auto">
+                <div className="text-center mb-16 mx-auto">
                   <h2 className="text-sm font-bold text-[#e1ce8c] tracking-widest uppercase mb-3">Mengapa Memilih Kami?</h2>
                   <h3 className="text-3xl md:text-4xl font-black text-slate-900">Keunggulan {siteData.sekolah.nama}</h3>
                 </div>
@@ -1326,7 +1336,7 @@ export default function App() {
                 <Lock className="w-6 h-6 text-[#00664f]" />
               </div>
               <h3 className="text-xl font-bold text-slate-900">Otorisasi Admin</h3>
-              <p className="text-xs text-slate-500 mt-1">Gunakan password: <strong>admin123</strong></p>
+
             </div>
             <form onSubmit={handleAdminLogin}>
               <input 
