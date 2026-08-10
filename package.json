@@ -1,6 +1,7 @@
 {
   "name": "web-sekolah",
   "version": "1.0.0",
+  "private": true,
   "homepage": "https://muhamadirham3794-hue.github.io/web-sekolah",
   "scripts": {
     "start": "react-scripts start",
@@ -17,6 +18,12 @@
     "react-dom": "^19.2.8",
     "react-scripts": "^5.0.1"
   },
+  "devDependencies": {
+    "autoprefixer": "^10.5.4",
+    "gh-pages": "^6.3.0",
+    "postcss": "^8.5.26",
+    "tailwindcss": "^3.4.19"
+  },
   "browserslist": {
     "production": [
       ">0.2%",
@@ -28,11 +35,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "devDependencies": {
-    "autoprefixer": "^10.5.4",
-    "gh-pages": "^6.3.0",
-    "postcss": "^8.5.26",
-    "tailwindcss": "^3.4.19"
   }
 }

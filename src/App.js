@@ -7,7 +7,7 @@ import {
   Lock, Edit3, Save, LogOut, Settings, Plus, Trash2
 } from 'lucide-react';
 
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyGHg7ebmFkGbsw4cHptXvvc5zw_T7wSgh6ReNamX98l7gwEw3WtjOHL_3GvIS46QIc7g/exec";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwjtR8bE7qOhJ01yC5NCgjnD1QvM_8eJGV_UMvIxND89SQUadLaUh-odljRPG15p8eO2g/exec";
 
 const FEATURES = [
   {
@@ -77,7 +77,7 @@ const LATEST_NEWS = [
     title: "Siswa SMP Al-Fathonah Raih Medali Emas Olimpiade Sains Nasional Tingkat Kabupaten",
     date: "15 Juli 2026",
     category: "Prestasi",
-    image: "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=600",
+    image: "https://images.unsplash.com/photo-1532094349884-543bc11b234d?q=80&w=600",
     content: "Prestasi membanggakan kembali ditorehkan oleh siswa SMP Al-Fathonah Arjasari. Ananda Muhammad Fatih, siswa kelas VIII, berhasil meraih medali emas pada ajang Olimpiade Sains Nasional (OSN) tingkat Kabupaten Tasikmalaya di bidang Matematika.\n\nKeberhasilan ini tidak lepas dari kerja keras, ketekunan, dan doa dari seluruh civitas akademika, serta bimbingan intensif dari para guru pembina OSN. Prestasi ini semakin memotivasi kami untuk terus memberikan pendampingan terbaik bagi para siswa agar mampu bersaing di tingkat provinsi maupun nasional.\n\nSelamat kepada Ananda Fatih! Semoga prestasi ini menjadi inspirasi bagi siswa-siswi lainnya untuk terus berprestasi dan mengharumkan nama sekolah."
   },
   {
@@ -152,7 +152,15 @@ const NewsDetail = ({ news, onBack }) => {
 
         <article className="bg-white rounded-[2rem] shadow-xl shadow-slate-200/50 overflow-hidden border border-slate-100 relative">
           <div className="w-full h-[300px] md:h-[450px] relative">
-            <img src={news.image} alt={news.title} className="w-full h-full object-cover" />
+            <img 
+              src={news.image} 
+              alt={news.title} 
+              className="w-full h-full object-cover"
+              onError={(e) => {
+                e.target.onerror = null;
+                e.target.src = "https://images.unsplash.com/photo-1577896851231-70ef18881754?q=80&w=600";
+              }}
+            />
             <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent"></div>
             <div className="absolute bottom-6 left-6 md:bottom-10 md:left-10 bg-white/95 backdrop-blur-sm text-[#00664f] text-sm font-bold px-5 py-2 rounded-full shadow-lg">
               {news.category}
@@ -211,6 +219,7 @@ const FormPPDB = ({ setCurrentPage, siteData }) => {
     setRegNumber(generatedNo);
 
     const dataPayload = {
+      action: 'SUBMIT_PPDB',
       ...formData,
       noRegistrasi: generatedNo
     };
@@ -218,11 +227,11 @@ const FormPPDB = ({ setCurrentPage, siteData }) => {
     try {
       await fetch(SCRIPT_URL, {
         method: 'POST',
-        mode: 'no-cors',
         headers: {
-          'Content-Type': 'text/plain',
+          'Content-Type': 'text/plain;charset=utf-8',
         },
         body: JSON.stringify(dataPayload),
+        redirect: 'follow'
       });
 
       setStatus('success');
@@ -505,7 +514,11 @@ const AdminDashboard = ({ siteData, setSiteData, showToast, onLogout }) => {
 
       const response = await fetch(SCRIPT_URL, {
         method: 'POST',
-        body: JSON.stringify(payload)
+        headers: {
+          'Content-Type': 'text/plain;charset=utf-8'
+        },
+        body: JSON.stringify(payload),
+        redirect: 'follow'
       });
 
       const result = await response.json();
@@ -519,7 +532,9 @@ const AdminDashboard = ({ siteData, setSiteData, showToast, onLogout }) => {
       }
     } catch (error) {
       console.error('Error saving data:', error);
-      showToast('Terjadi kesalahan koneksi saat menyimpan data.');
+      setSiteData(localData);
+      localStorage.setItem('siteData', JSON.stringify(localData));
+      showToast('Perubahan disimpan secara lokal di browser.');
     } finally {
       setLoading(false);
     }
@@ -838,7 +853,7 @@ export default function App() {
   useEffect(() => {
     const fetchCMSData = async () => {
       try {
-        const response = await fetch(SCRIPT_URL);
+        const response = await fetch(SCRIPT_URL, { redirect: 'follow' });
         const data = await response.json();
         
         if (data && data.status === 'success' && data.siteData) {
@@ -993,7 +1008,7 @@ export default function App() {
                 <Lock className="w-6 h-6" />
               </div>
               <div>
-                <h3 className="text-xl font-bold text-slate-900">Admin Login</h3>
+                <h3 className="text-xl font-bold text-[#00664f]">Admin Login</h3>
                 <p className="text-slate-500 text-xs">Masukkan password administrator</p>
               </div>
             </div>
@@ -1145,7 +1160,7 @@ export default function App() {
                 <div className="hidden md:block relative h-[600px] w-full">
                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-[28rem] rounded-[2rem] overflow-hidden border-8 border-white/10 shadow-2xl animate-float z-20 bg-[#004d3b]">
                      <img 
-                       src={`${process.env.PUBLIC_URL}/foto-siswa.jpeg`} 
+                       src="foto-siswa.jpeg" 
                        alt="Students" 
                        className="w-full h-full object-cover" 
                        onError={(e) => {
@@ -1195,6 +1210,10 @@ export default function App() {
                       alt="Kepala Sekolah" 
                       className="w-full h-[500px] object-cover rounded-[2.5rem] relative z-10 shadow-2xl grayscale-[20%]"
                       loading="lazy"
+                      onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src = "https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=800";
+                      }}
                     />
                     <div className="absolute -bottom-8 -right-8 w-32 h-32 bg-[#e1ce8c] rounded-full z-20 flex items-center justify-center shadow-xl border-8 border-slate-50">
                       <Quote className="w-12 h-12 text-[#004d3b]" />
@@ -1267,7 +1286,16 @@ export default function App() {
                   {siteData.guru.map((guru) => (
                     <div key={guru.id} className="min-w-[280px] md:min-w-[320px] bg-white rounded-[2rem] p-6 shadow-[0_4px_20px_rgba(0,0,0,0.03)] border border-slate-100 snap-center hover:-translate-y-2 transition-transform duration-300 group">
                       <div className="w-32 h-32 mx-auto rounded-full overflow-hidden mb-6 border-4 border-slate-50 shadow-inner group-hover:border-[#00664f]/20 transition-colors">
-                        <img src={guru.image} alt={guru.name} className="w-full h-full object-cover grayscale-[20%] group-hover:grayscale-0 transition-all duration-500" loading="lazy" />
+                        <img 
+                          src={guru.image} 
+                          alt={guru.name} 
+                          className="w-full h-full object-cover grayscale-[20%] group-hover:grayscale-0 transition-all duration-500" 
+                          loading="lazy" 
+                          onError={(e) => {
+                            e.target.onerror = null;
+                            e.target.src = "https://images.unsplash.com/photo-1568602471122-7832951cc4c5?q=80&w=400";
+                          }}
+                        />
                       </div>
                       <div className="text-center">
                         <h4 className="text-xl font-bold text-slate-900 mb-1 group-hover:text-[#00664f] transition-colors">{guru.name}</h4>
@@ -1347,7 +1375,16 @@ export default function App() {
                   {siteData.berita.map(news => (
                     <div key={news.id} onClick={() => handleReadNews(news)} className="bg-white rounded-[2rem] overflow-hidden shadow-[0_4px_20px_rgba(0,0,0,0.03)] border border-slate-100 group cursor-pointer hover:-translate-y-2 transition-all duration-300 flex flex-col">
                       <div className="h-56 overflow-hidden relative">
-                        <img src={news.image} alt={news.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" loading="lazy" />
+                        <img 
+                          src={news.image} 
+                          alt={news.title} 
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
+                          loading="lazy" 
+                          onError={(e) => {
+                            e.target.onerror = null;
+                            e.target.src = "https://images.unsplash.com/photo-1577896851231-70ef18881754?q=80&w=600";
+                          }}
+                        />
                         <div className="absolute top-4 left-4 bg-white/95 backdrop-blur-sm text-[#00664f] text-xs font-bold px-4 py-1.5 rounded-full shadow-sm">
                           {news.category}
                         </div>
@@ -1368,108 +1405,92 @@ export default function App() {
                 </div>
               </div>
             </section>
-
-            <section className="py-20 bg-white">
-              <div className="max-w-7xl mx-auto px-4 sm:px-6">
-                <div className="bg-gradient-to-r from-[#00664f] to-[#004d3b] rounded-[3rem] p-12 text-center relative overflow-hidden shadow-2xl">
-                  <div className="absolute top-0 right-0 opacity-10 transform translate-x-1/4 -translate-y-1/4">
-                    <Shield className="w-96 h-96" />
-                  </div>
-                  <div className="relative z-10 max-w-2xl mx-auto">
-                    <h3 className="text-3xl md:text-5xl font-black text-white mb-6">Siap Bergabung Bersama Kami?</h3>
-                    <p className="text-slate-200 text-lg mb-10">
-                      Pendaftaran Peserta Didik Baru (PPDB) Tahun Ajaran {siteData.sekolah.tahunPelajaran} telah dibuka. Kuota terbatas, segera daftarkan putra/putri Anda.
-                    </p>
-                    <button onClick={() => navigateTo('ppdb')} className="bg-[#e1ce8c] text-[#004d3b] hover:bg-white px-10 py-5 rounded-full font-black text-lg transition-all duration-300 shadow-xl hover:scale-105 inline-flex items-center gap-2">
-                      Isi Formulir Pendaftaran Sekarang <ArrowRight className="w-6 h-6" />
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </section>
           </div>
         )}
       </main>
 
-      <footer className="bg-[#002f23] text-slate-300 py-20 border-t-[8px] border-[#e1ce8c] relative overflow-hidden">
-        <div className="absolute top-0 right-0 opacity-5">
-           <Shield className="w-96 h-96 transform translate-x-1/3 -translate-y-1/3" />
-        </div>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 grid grid-cols-1 md:grid-cols-12 gap-12 relative z-10">
-          <div className="md:col-span-5 pr-0 md:pr-10">
-            <div className="flex items-center gap-4 mb-8">
-               <div className="w-14 h-14 bg-white rounded-full flex items-center justify-center relative shadow-lg shrink-0">
-                 {siteData.sekolah.logo ? (
-                   <img src={siteData.sekolah.logo} alt="Logo" className="w-10 h-10 object-contain z-10" />
-                 ) : (
-                   <Shield className="w-7 h-7 text-[#00664f] z-10" />
-                 )}
-               </div>
-               <div>
-                 <h2 className="text-white text-2xl font-black tracking-tight leading-none">{siteData.sekolah.nama}</h2>
-                 <p className="text-[#e1ce8c] text-xs font-bold tracking-[0.1em] uppercase mt-1">NPSN: {siteData.sekolah.npsn} &bull; {siteData.sekolah.lokasi}</p>
-               </div>
+      <footer className="bg-slate-950 text-slate-400 py-16 border-t border-slate-900 relative">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
+            <div className="md:col-span-2 space-y-6">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center border border-slate-800">
+                  {siteData.sekolah.logo ? (
+                    <img src={siteData.sekolah.logo} alt="Logo" className="w-8 h-8 object-contain" />
+                  ) : (
+                    <Shield className="w-5 h-5 text-[#00664f]" />
+                  )}
+                </div>
+                <span className="font-black text-xl text-white tracking-tight">{siteData.sekolah.nama}</span>
+              </div>
+              <p className="text-slate-400 leading-relaxed text-sm max-w-md">
+                Lembaga pendidikan Islam terpadu yang berdedikasi membentuk generasi berilmu pengetahuan, berteknologi, dan berkarakter mulia.
+              </p>
+              <div className="space-y-3 text-sm">
+                <p className="flex items-start gap-3 text-slate-300">
+                  <MapPin className="w-5 h-5 text-[#e1ce8c] shrink-0 mt-0.5" />
+                  <span>{siteData.sekolah.alamat}</span>
+                </p>
+                <p className="flex items-center gap-3 text-slate-300">
+                  <Phone className="w-5 h-5 text-[#e1ce8c] shrink-0" />
+                  <span>{siteData.sekolah.telepon}</span>
+                </p>
+                <p className="flex items-center gap-3 text-slate-300">
+                  <Mail className="w-5 h-5 text-[#e1ce8c] shrink-0" />
+                  <span>{siteData.sekolah.email}</span>
+                </p>
+              </div>
             </div>
-            <p className="text-sm leading-loose mb-8 text-slate-400 font-light">
-              Lembaga pendidikan tingkat menengah pertama yang berdedikasi mendidik generasi bangsa yang cerdas secara intelektual, matang emosional, dan kuat spiritual berdasarkan Al-Qur'an dan As-Sunnah.
-            </p>
-          </div>
-          
-          <div className="md:col-span-3">
-            <h4 className="text-white font-bold text-lg mb-6 flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-[#e1ce8c]"></span> Tautan Cepat
-            </h4>
-            <ul className="space-y-3 text-sm">
-              {MENU_ITEMS.map((item) => (
-                <li key={item.id}>
-                  <button 
-                    onClick={() => handleMenuClick(item)} 
-                    className="hover:text-[#e1ce8c] transition-colors flex items-center gap-2"
-                  >
-                    <ChevronRight className="w-3 h-3 text-[#e1ce8c]" /> {item.label}
+
+            <div>
+              <h4 className="font-bold text-white mb-6 uppercase tracking-wider text-xs">Navigasi Utama</h4>
+              <ul className="space-y-3 text-sm">
+                {MENU_ITEMS.map((item) => (
+                  <li key={item.id}>
+                    <button onClick={() => handleMenuClick(item)} className="hover:text-[#e1ce8c] transition-colors">
+                      {item.label}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div>
+              <h4 className="font-bold text-white mb-6 uppercase tracking-wider text-xs">Akses Khusus</h4>
+              <ul className="space-y-3 text-sm mb-6">
+                <li>
+                  <button onClick={() => navigateTo('ppdb')} className="hover:text-[#e1ce8c] transition-colors">
+                    Pendaftaran PPDB Online
                   </button>
                 </li>
-              ))}
-              <li>
-                <button 
-                  onClick={() => navigateTo('ppdb')} 
-                  className="hover:text-[#e1ce8c] transition-colors flex items-center gap-2"
-                >
-                  <ChevronRight className="w-3 h-3 text-[#e1ce8c]" /> Pendaftaran PPDB
-                </button>
-              </li>
-            </ul>
+                <li>
+                  <a href="https://s.id/smp_afar" target="_blank" rel="noopener noreferrer" className="hover:text-[#e1ce8c] transition-colors">
+                    Microsite Resmi
+                  </a>
+                </li>
+              </ul>
+
+              <button 
+                onClick={() => {
+                  if (isAdminLoggedIn) {
+                    navigateTo('admin');
+                  } else {
+                    setShowAdminLogin(true);
+                  }
+                }}
+                className="inline-flex items-center gap-2 text-xs text-slate-400 hover:text-white bg-slate-900 border border-slate-800 px-4 py-2 rounded-xl transition-all"
+              >
+                <Lock className="w-3.5 h-3.5 text-[#e1ce8c]" /> Admin Dashboard
+              </button>
+            </div>
           </div>
 
-          <div className="md:col-span-4">
-            <h4 className="text-white font-bold text-lg mb-6 flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-[#e1ce8c]"></span> Kontak Kami
-            </h4>
-            <ul className="space-y-4 text-sm text-slate-400 font-light">
-              <li className="flex items-start gap-3">
-                <MapPin className="w-5 h-5 text-[#e1ce8c] shrink-0 mt-0.5" />
-                <span>{siteData.sekolah.alamat}</span>
-              </li>
-              <li className="flex items-center gap-3">
-                <Phone className="w-5 h-5 text-[#e1ce8c] shrink-0" />
-                <span>{siteData.sekolah.telepon}</span>
-              </li>
-              <li className="flex items-center gap-3">
-                <Mail className="w-5 h-5 text-[#e1ce8c] shrink-0" />
-                <span>{siteData.sekolah.email}</span>
-              </li>
-            </ul>
+          <div className="pt-8 border-t border-slate-900 flex flex-col md:flex-row justify-between items-center text-xs text-slate-500 gap-4">
+            <p>&copy; {new Date().getFullYear()} {siteData.sekolah.nama}. Hak Cipta Dilindungi.</p>
+            <p className="flex items-center gap-1">
+              Dikembangkan dengan penuh dedikasi untuk kemajuan pendidikan Islam.
+            </p>
           </div>
-        </div>
-
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-12 mt-12 border-t border-slate-800/80 text-xs text-slate-500 flex flex-col sm:flex-row justify-between items-center gap-4 relative z-10">
-          <p>&copy; 2026 {siteData.sekolah.nama}. Hak Cipta Dilindungi.</p>
-          <button 
-            onClick={() => setShowAdminLogin(true)} 
-            className="text-slate-500 hover:text-[#e1ce8c] transition-colors text-xs flex items-center gap-1"
-          >
-            <Lock className="w-3 h-3" /> Area Admin
-          </button>
         </div>
       </footer>
     </div>
