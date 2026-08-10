@@ -1,0 +1,133 @@
+// Ganti SPREADSHEET_ID dengan ID Google Sheets Anda
+const SPREADSHEET_ID = '18X_wJhlWagA2uoIVubixS2FGccUScvgoJyJQUwB-aL0';
+
+/**
+ * Fungsi helper untuk memberikan respons JSON dengan header CORS
+ */
+function createJsonResponse(data) {
+  return ContentService.createTextOutput(JSON.stringify(data))
+    .setMimeType(ContentService.MimeType.JSON);
+}
+
+/**
+ * Menangani permintaan GET (Membaca konfigurasi CMS Website)
+ */
+function doGet(e) {
+  try {
+    const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+    let sheetConfig = ss.getSheetByName('Site_Config');
+
+    // Buat sheet 'Site_Config' jika belum ada
+    if (!sheetConfig) {
+      sheetConfig = ss.insertSheet('Site_Config');
+      sheetConfig.getRange('A1').setValue('{}');
+    }
+
+    // Ambil data konfigurasi JSON dari sel A1
+    const configJsonRaw = sheetConfig.getRange('A1').getValue();
+    let configData = {};
+
+    if (configJsonRaw) {
+      try {
+        configData = JSON.parse(configJsonRaw);
+      } catch (pError) {
+        // Jika format A1 bukan JSON valid, kembalikan teks mentah atau objek kosong
+        configData = { raw: configJsonRaw };
+      }
+    }
+
+    return createJsonResponse({
+      status: 'success',
+      data: configData
+    });
+
+  } catch (error) {
+    return createJsonResponse({
+      status: 'error',
+      message: error.message
+    });
+  }
+}
+
+/**
+ * Menangani permintaan POST (Simpan CMS & Submit Form PPDB)
+ */
+function doPost(e) {
+  try {
+    if (!e || !e.postData || !e.postData.contents) {
+      throw new Error("Data kiriman kosong.");
+    }
+
+    const postData = JSON.parse(e.postData.contents);
+    
+    // Memastikan action terbaca baik di root payload maupun di dalam data
+    const action = postData.action || (postData.data && postData.data.action);
+    const payload = postData.data !== undefined ? postData.data : postData;
+
+    const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+
+    // Aksi 1: Simpan Perubahan Admin / CMS Website
+    if (action === 'SAVE_CMS') {
+      let sheetConfig = ss.getSheetByName('Site_Config');
+      if (!sheetConfig) {
+        sheetConfig = ss.insertSheet('Site_Config');
+      }
+
+      sheetConfig.getRange('A1').setValue(JSON.stringify(payload));
+
+      return createJsonResponse({
+        status: 'success',
+        message: 'Konfigurasi website berhasil disimpan dan dipublikasikan!'
+      });
+    }
+
+    // Aksi 2: Simpan Pendaftaran PPDB Siswa Baru
+    else if (action === 'SUBMIT_PPDB') {
+      let sheetPPDB = ss.getSheetByName('DB_PPDB_SMP_ALFATHONAH');
+      
+      if (!sheetPPDB) {
+        sheetPPDB = ss.insertSheet('DB_PPDB_SMP_ALFATHONAH');
+        sheetPPDB.appendRow([
+          'Waktu Pendaftaran', 'No Registrasi', 'Nama Lengkap', 'NISN', 
+          'Tempat Lahir', 'Tanggal Lahir', 'Jenis Kelamin', 'Agama', 
+          'Alamat Lengkap', 'Asal Sekolah', 'Tahun Lulus', 'Nama Orang Tua', 
+          'Pekerjaan Orang Tua', 'No WhatsApp'
+        ]);
+      }
+
+      const d = payload || {};
+
+      sheetPPDB.appendRow([
+        Utilities.formatDate(new Date(), 'Asia/Jakarta', 'yyyy-MM-dd HH:mm:ss'),
+        d.noRegistrasi || '',
+        d.namaLengkap || '',
+        d.nisn || '',
+        d.tempatLahir || '',
+        d.tanggalLahir || '',
+        d.jenisKelamin || '',
+        d.agama || '',
+        d.alamatLengkap || '',
+        d.asalSekolah || '',
+        d.tahunLulus || '',
+        d.namaOrangTua || '',
+        d.pekerjaan || '',
+        d.noWhatsapp || ''
+      ]);
+
+      return createJsonResponse({
+        status: 'success',
+        message: 'Pendaftaran PPDB berhasil disimpan!'
+      });
+    }
+
+    else {
+      throw new Error(`Aksi '${action}' tidak dikenali.`);
+    }
+
+  } catch (error) {
+    return createJsonResponse({
+      status: 'error',
+      message: error.message
+    });
+  }
+}

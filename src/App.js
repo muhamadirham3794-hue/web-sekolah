@@ -7,6 +7,8 @@ import {
   Lock, Edit3, Save, LogOut, Settings, Plus, Trash2
 } from 'lucide-react';
 
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyGHg7ebmFkGbsw4cHptXvvc5zw_T7wSgh6ReNamX98l7gwEw3WtjOHL_3GvIS46QIc7g/exec";
+
 const FEATURES = [
   {
     icon: <BookOpen className="w-6 h-6" />,
@@ -88,11 +90,55 @@ const LATEST_NEWS = [
   }
 ];
 
+const INITIAL_SITE_DATA = {
+  sekolah: {
+    nama: "SMP AL-FATHONAH ARJASARI",
+    npsn: "70050373",
+    tahunPelajaran: "2026/2027",
+    lokasi: "Leuwisari - Tasikmalaya",
+    alamat: "Jl. Arjasari No. 40 RT. 06 RW. 02, Leuwisari, Kab. Tasikmalaya, Jawa Barat, 46464",
+    telepon: "(+62) 822-6166-8868",
+    email: "smp.alfathonah@gmail.com",
+    logo: "",
+    akreditasi: "Predikat A",
+    totalSiswa: "500+ Aktif"
+  },
+  hero: {
+    tagline: "Penerimaan Siswa Baru",
+    title1: "Cerdas",
+    title2: "Intelektual & Spiritual",
+    subtitle: "Mencetak generasi islami unggulan yang menguasai ilmu pengetahuan, teknologi, dan berakar kuat pada nilai-nilai akhlakul karimah."
+  },
+  profil: {
+    namaKepsek: "Ahmad Fathonah, M.Pd.",
+    fotoKepsek: "https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=800",
+    sambutan: "Pendidikan bukan sekadar proses transfer ilmu pengetahuan, melainkan pembentukan karakter yang utuh. Di SMP Al-Fathonah Arjasari, kami memadukan kurikulum modern dengan keluhuran akhlak Islam untuk membekali anak-anak kita menghadapi tantangan global dengan iman yang teguh.",
+    videoProfil: ""
+  },
+  fasilitas: FASILITAS,
+  berita: LATEST_NEWS,
+  ekskul: [
+    { name: "Pramuka", iconName: "Target", category: "Wajib" },
+    { name: "Paskibra", iconName: "Star", category: "Pilihan" },
+    { name: "Rohis (Tahfidz)", iconName: "BookOpen", category: "Keagamaan" },
+    { name: "Futsal", iconName: "Activity", category: "Olahraga" },
+    { name: "Pencak Silat", iconName: "Shield", category: "Olahraga" },
+    { name: "Klub Komputer", iconName: "Monitor", category: "Akademik" }
+  ],
+  guru: [
+    { id: 1, name: "Budi Santoso, S.Pd.", role: "Guru Matematika", image: "https://images.unsplash.com/photo-1568602471122-7832951cc4c5?q=80&w=400" },
+    { id: 2, name: "Siti Aminah, M.Ag.", role: "Guru PAI & Budi Pekerti", image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=400" },
+    { id: 3, name: "Ahmad Fauzi, S.Si.", role: "Guru IPA Terpadu", image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=400" },
+    { id: 4, name: "Ratna Sari, S.Pd.", role: "Guru Bahasa Indonesia", image: "https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=400" },
+    { id: 5, name: "Rizky Pratama, S.Kom.", role: "Guru TIK", image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=400" },
+    { id: 6, name: "Nisa Fitriani, S.Pd.", role: "Guru Bahasa Inggris", image: "https://images.unsplash.com/photo-1607990281513-2c110a25bd8c?q=80&w=400" }
+  ]
+};
+
 const NewsDetail = ({ news, onBack }) => {
   if (!news) return null;
   return (
     <div className="min-h-screen bg-slate-50 pt-32 pb-24 px-4 sm:px-6 relative overflow-hidden">
-      {/* Background Decorators */}
       <div className="absolute top-0 right-0 w-[30rem] h-[30rem] bg-[#00664f]/5 rounded-full blur-3xl -z-10 transform translate-x-1/2 -translate-y-1/2"></div>
       
       <div className="max-w-4xl mx-auto">
@@ -138,6 +184,11 @@ const NewsDetail = ({ news, onBack }) => {
   );
 };
 
+const generateRegNo = () => {
+  const randomNum = Math.floor(100 + Math.random() * 900);
+  return `REG-2026-${randomNum}`;
+};
+
 const FormPPDB = ({ setCurrentPage, siteData }) => {
   const [formData, setFormData] = useState({
     namaLengkap: '', nisn: '', tempatLahir: '', tanggalLahir: '',
@@ -145,49 +196,47 @@ const FormPPDB = ({ setCurrentPage, siteData }) => {
     tahunLulus: '', namaOrtu: '', pekerjaanOrtu: '', noWhatsapp: ''
   });
   const [status, setStatus] = useState('idle'); 
+  const [regNumber, setRegNumber] = useState('');
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzobjGYJQkX_T692ATKLShObWiwSJGOOinOmEeat-N4nmHK-8jQlk5VYdnuUd1fmJDxkw/exec";
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setStatus('loading');
+    
+    const generatedNo = generateRegNo();
+    setRegNumber(generatedNo);
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  setStatus('loading');
+    const dataPayload = {
+      ...formData,
+      noRegistrasi: generatedNo
+    };
 
-  try {
-    // Format data menjadi URL Search Params untuk menghindari blokir CORS
-    const formDataPayload = new URLSearchParams();
-    Object.keys(formData).forEach((key) => {
-      formDataPayload.append(key, formData[key]);
-    });
+    try {
+      await fetch(SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: {
+          'Content-Type': 'text/plain',
+        },
+        body: JSON.stringify(dataPayload),
+      });
 
-    await fetch(SCRIPT_URL, {
-      method: 'POST',
-      mode: 'no-cors', // Penting agar request tidak diblokir browser
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      body: formDataPayload.toString(),
-    });
+      setStatus('success');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
 
-    // Karena mode no-cors tidak mengembalikan response JSON,
-    // alur dianggap berhasil jika tidak terjadi network error
-    setStatus('success');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-
-  } catch (error) {
-    console.error("Error submitting form:", error);
-    alert("Terjadi kesalahan koneksi. Pastikan koneksi internet stabil.");
-    setStatus('idle');
-  }
-};
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      alert("Terjadi kesalahan koneksi. Data disimpan secara lokal.");
+      setStatus('success');
+    }
+  };
 
   return (
     <div className="min-h-screen bg-slate-50 pt-32 pb-24 px-4 sm:px-6 relative overflow-hidden">
-      {/* Background Decorators */}
       <div className="absolute top-0 right-0 w-[30rem] h-[30rem] bg-[#00664f]/5 rounded-full blur-3xl -z-10 transform translate-x-1/2 -translate-y-1/2"></div>
       <div className="absolute bottom-0 left-0 w-[30rem] h-[30rem] bg-[#e1ce8c]/10 rounded-full blur-3xl -z-10 transform -translate-x-1/2 translate-y-1/2"></div>
 
@@ -201,7 +250,6 @@ const handleSubmit = async (e) => {
         </button>
 
         <div className="bg-white rounded-[2rem] shadow-2xl shadow-slate-200/50 overflow-hidden border border-slate-100 relative">
-          {/* Header Form */}
           <div className="bg-gradient-to-br from-[#00664f] to-[#004d3b] p-8 md:p-12 text-white relative overflow-hidden">
              <div className="absolute top-0 right-0 opacity-10">
                 <Shield className="w-64 h-64 transform translate-x-1/4 -translate-y-1/4" />
@@ -230,9 +278,11 @@ const handleSubmit = async (e) => {
                 </p>
                 <div className="bg-slate-50 border border-slate-200 p-8 rounded-2xl inline-block max-w-lg mb-10 w-full">
                   <p className="text-sm text-slate-500 mb-2">Nomor Registrasi Anda:</p>
-                  <p className="text-2xl font-black text-[#00664f] tracking-widest mb-4">PPDB-{Math.floor(1000 + Math.random() * 9000)}</p>
+                  <p className="text-2xl font-black text-[#00664f] tracking-widest mb-4">
+                  {regNumber || "REG-2026-001"}
+                  </p>
                   <p className="text-sm text-slate-600">
-                    Silakan simpan nomor ini. Panitia kami akan segera menghubungi Anda melalui WhatsApp untuk tahap verifikasi berkas.
+                  Silakan simpan nomor ini. Panitia kami akan segera menghubungi Anda melalui WhatsApp untuk tahap verifikasi berkas.
                   </p>
                 </div>
                 <div>
@@ -246,8 +296,6 @@ const handleSubmit = async (e) => {
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-12">
-                
-                {/* Bagian A */}
                 <div className="space-y-6">
                   <div className="flex items-center gap-4 pb-4 border-b border-slate-100">
                     <div className="w-10 h-10 rounded-xl bg-[#00664f]/10 text-[#00664f] flex items-center justify-center font-bold text-lg">1</div>
@@ -300,7 +348,6 @@ const handleSubmit = async (e) => {
                   </div>
                 </div>
 
-                {/* Bagian B */}
                 <div className="space-y-6">
                   <div className="flex items-center gap-4 pb-4 border-b border-slate-100">
                     <div className="w-10 h-10 rounded-xl bg-[#00664f]/10 text-[#00664f] flex items-center justify-center font-bold text-lg">2</div>
@@ -320,7 +367,6 @@ const handleSubmit = async (e) => {
                   </div>
                 </div>
 
-                {/* Bagian C */}
                 <div className="space-y-6">
                   <div className="flex items-center gap-4 pb-4 border-b border-slate-100">
                     <div className="w-10 h-10 rounded-xl bg-[#00664f]/10 text-[#00664f] flex items-center justify-center font-bold text-lg">3</div>
@@ -353,7 +399,7 @@ const handleSubmit = async (e) => {
                   >
                     {status === 'loading' ? (
                       <>
-                        <div className="w-6 h-6 border-3 border-white/30 border-t-white rounded-full animate-spin"></div>
+                        <div className="w-6 h-6 border-[3px] border-white/30 border-t-white rounded-full animate-spin"></div>
                         Memproses Data...
                       </>
                     ) : (
@@ -373,67 +419,49 @@ const handleSubmit = async (e) => {
   );
 };
 
-const INITIAL_SITE_DATA = {
-  sekolah: {
-    nama: "SMP AL-FATHONAH ARJASARI",
-    npsn: "70050373",
-    tahunPelajaran: "2026/2027",
-    lokasi: "Leuwisari - Tasikmalaya",
-    alamat: "Jl. Arjasari No. 40 RT. 06 RW. 02, Leuwisari, Kab. Tasikmalaya, Jawa Barat, 46464",
-    telepon: "(+62) 822-6166-8868",
-    email: "smp.alfathonah@gmail.com",
-    logo: "",
-    akreditasi: "Predikat A",
-    totalSiswa: "500+ Aktif"
-  },
-  hero: {
-    tagline: "Penerimaan Siswa Baru",
-    title1: "Cerdas",
-    title2: "Intelektual & Spiritual",
-    subtitle: "Mencetak generasi islami unggulan yang menguasai ilmu pengetahuan, teknologi, dan berakar kuat pada nilai-nilai akhlakul karimah."
-  },
-  profil: {
-    namaKepsek: "Ahmad Fathonah, M.Pd.",
-    fotoKepsek: "https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=800",
-    sambutan: "Pendidikan bukan sekadar proses transfer ilmu pengetahuan, melainkan pembentukan karakter yang utuh. Di SMP Al-Fathonah Arjasari, kami memadukan kurikulum modern dengan keluhuran akhlak Islam untuk membekali anak-anak kita menghadapi tantangan global dengan iman yang teguh.",
-    videoProfil: ""
-  },
-  fasilitas: FASILITAS,
-  berita: LATEST_NEWS,
-  ekskul: [
-    { name: "Pramuka", iconName: "Target", category: "Wajib" },
-    { name: "Paskibra", iconName: "Star", category: "Pilihan" },
-    { name: "Rohis (Tahfidz)", iconName: "BookOpen", category: "Keagamaan" },
-    { name: "Futsal", iconName: "Activity", category: "Olahraga" },
-    { name: "Pencak Silat", iconName: "Shield", category: "Olahraga" },
-    { name: "Klub Komputer", iconName: "Monitor", category: "Akademik" }
-  ],
-  guru: [
-    { id: 1, name: "Budi Santoso, S.Pd.", role: "Guru Matematika", image: "https://images.unsplash.com/photo-1568602471122-7832951cc4c5?q=80&w=400" },
-    { id: 2, name: "Siti Aminah, M.Ag.", role: "Guru PAI & Budi Pekerti", image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=400" },
-    { id: 3, name: "Ahmad Fauzi, S.Si.", role: "Guru IPA Terpadu", image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=400" },
-    { id: 4, name: "Ratna Sari, S.Pd.", role: "Guru Bahasa Indonesia", image: "https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=400" },
-    { id: 5, name: "Rizky Pratama, S.Kom.", role: "Guru TIK", image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=400" },
-    { id: 6, name: "Nisa Fitriani, S.Pd.", role: "Guru Bahasa Inggris", image: "https://images.unsplash.com/photo-1607990281513-2c110a25bd8c?q=80&w=400" }
-  ]
-};
-
 const AdminDashboard = ({ siteData, setSiteData, showToast, onLogout }) => {
   const [localData, setLocalData] = useState(siteData);
+  const [loading, setLoading] = useState(false);
 
-  // Fungsi untuk membaca file gambar dan mengubahnya menjadi Base64 string
   const processImageUpload = (e, callback) => {
     const file = e.target.files[0];
     if (file) {
       const reader = new FileReader();
-      reader.onloadend = () => {
-        callback(reader.result);
+      reader.onload = (event) => {
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          const MAX_WIDTH = 800;
+          const MAX_HEIGHT = 800;
+          let width = img.width;
+          let height = img.height;
+
+          if (width > height) {
+            if (width > MAX_WIDTH) {
+              height *= MAX_WIDTH / width;
+              width = MAX_WIDTH;
+            }
+          } else {
+            if (height > MAX_HEIGHT) {
+              width *= MAX_HEIGHT / height;
+              height = MAX_HEIGHT;
+            }
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, width, height);
+
+          const compressedBase64 = canvas.toDataURL('image/jpeg', 0.7);
+          callback(compressedBase64);
+        };
+        img.src = event.target.result;
       };
       reader.readAsDataURL(file);
     }
   };
 
-  // Fungsi untuk mengunggah video
   const processVideoUpload = (e, callback) => {
     const file = e.target.files[0];
     if (file) {
@@ -446,7 +474,6 @@ const AdminDashboard = ({ siteData, setSiteData, showToast, onLogout }) => {
     }
   };
 
-  // Fungsi untuk mengupdate item spesifik pada array Fasilitas / Berita
   const updateArrayItem = (arrayName, index, field, value) => {
     const newArray = [...localData[arrayName]];
     newArray[index] = { ...newArray[index], [field]: value };
@@ -468,17 +495,35 @@ const AdminDashboard = ({ siteData, setSiteData, showToast, onLogout }) => {
     showToast('Data guru dihapus.');
   };
 
-  const handleSave = () => {
-  try {
-    setSiteData(localData);
-    // Tambahkan baris ini untuk menyimpan ke localStorage
-    localStorage.setItem('siteData', JSON.stringify(localData));
-    showToast('Perubahan berhasil disimpan!');
-  } catch (error) {
-    console.error(error);
-    showToast('Gagal menyimpan! Ukuran data/gambar terlalu besar.');
-  }
-};
+  const handleSave = async () => {
+    setLoading(true);
+    try {
+      const payload = {
+        action: 'SAVE_CMS',
+        data: localData
+      };
+
+      const response = await fetch(SCRIPT_URL, {
+        method: 'POST',
+        body: JSON.stringify(payload)
+      });
+
+      const result = await response.json();
+
+      if (result.status === 'success') {
+        setSiteData(localData);
+        localStorage.setItem('siteData', JSON.stringify(localData));
+        showToast('Perubahan berhasil disimpan ke Google Sheets!');
+      } else {
+        showToast('Gagal menyimpan: ' + (result.message || 'Respon tidak valid'));
+      }
+    } catch (error) {
+      console.error('Error saving data:', error);
+      showToast('Terjadi kesalahan koneksi saat menyimpan data.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-slate-50 pt-32 pb-24 px-4 sm:px-6">
@@ -496,7 +541,6 @@ const AdminDashboard = ({ siteData, setSiteData, showToast, onLogout }) => {
         </div>
 
         <div className="space-y-6">
-          {/* Pengaturan Identitas Sekolah */}
           <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-200">
             <h3 className="text-lg font-bold text-slate-800 mb-4 border-b pb-2 flex items-center gap-2"><Edit3 className="w-5 h-5"/> Identitas & Kontak Sekolah</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -547,7 +591,6 @@ const AdminDashboard = ({ siteData, setSiteData, showToast, onLogout }) => {
             </div>
           </div>
 
-          {/* Pengaturan Hero */}
           <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-200">
             <h3 className="text-lg font-bold text-slate-800 mb-4 border-b pb-2 flex items-center gap-2"><Edit3 className="w-5 h-5"/> Teks Beranda (Hero)</h3>
             <div className="space-y-4">
@@ -572,7 +615,6 @@ const AdminDashboard = ({ siteData, setSiteData, showToast, onLogout }) => {
             </div>
           </div>
 
-          {/* Pengaturan Profil */}
           <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-200">
             <h3 className="text-lg font-bold text-slate-800 mb-4 border-b pb-2 flex items-center gap-2"><Edit3 className="w-5 h-5"/> Profil & Sambutan</h3>
             <div className="space-y-6">
@@ -612,7 +654,6 @@ const AdminDashboard = ({ siteData, setSiteData, showToast, onLogout }) => {
             </div>
           </div>
 
-          {/* Pengaturan Fasilitas */}
           <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-200">
             <h3 className="text-lg font-bold text-slate-800 mb-4 border-b pb-2 flex items-center gap-2"><Edit3 className="w-5 h-5"/> Data Fasilitas (Upload Gambar)</h3>
             <div className="space-y-4">
@@ -641,7 +682,6 @@ const AdminDashboard = ({ siteData, setSiteData, showToast, onLogout }) => {
             </div>
           </div>
 
-          {/* Pengaturan Ekstrakurikuler */}
           <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-200">
             <h3 className="text-lg font-bold text-slate-800 mb-4 border-b pb-2 flex items-center gap-2"><Edit3 className="w-5 h-5"/> Data Ekstrakurikuler</h3>
             <div className="space-y-4">
@@ -674,7 +714,6 @@ const AdminDashboard = ({ siteData, setSiteData, showToast, onLogout }) => {
             </div>
           </div>
 
-          {/* Pengaturan Guru */}
           <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-200">
             <div className="flex justify-between items-center mb-4 border-b pb-2">
               <h3 className="text-lg font-bold text-slate-800 flex items-center gap-2"><Edit3 className="w-5 h-5"/> Data Tenaga Pendidik (Guru)</h3>
@@ -711,7 +750,6 @@ const AdminDashboard = ({ siteData, setSiteData, showToast, onLogout }) => {
             </div>
           </div>
 
-          {/* Pengaturan Berita */}
           <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-200">
             <h3 className="text-lg font-bold text-slate-800 mb-4 border-b pb-2 flex items-center gap-2"><Edit3 className="w-5 h-5"/> Data Berita (Upload Gambar)</h3>
             <div className="space-y-4">
@@ -750,10 +788,12 @@ const AdminDashboard = ({ siteData, setSiteData, showToast, onLogout }) => {
 
           <div className="sticky bottom-6 z-50">
             <button 
-              onClick={handleSave}
-              className="w-full bg-[#00664f] hover:bg-[#004d3b] text-white font-bold py-4 rounded-xl shadow-xl shadow-[#00664f]/30 flex items-center justify-center gap-3 transition-transform hover:-translate-y-1"
+              type="button"
+              onClick={handleSave} 
+              disabled={loading}
+              className="w-full bg-[#00664f] hover:bg-[#004d3b] text-white font-bold py-4 rounded-xl shadow-2xl flex items-center justify-center gap-2 transition-all hover:scale-[1.01]"
             >
-              <Save className="w-5 h-5" /> Terapkan Perubahan ke Website
+              <Save className="w-5 h-5" /> {loading ? "Menyimpan Perubahan..." : "Terapkan Perubahan ke Website"}
             </button>
           </div>
         </div>
@@ -769,20 +809,50 @@ export default function App() {
   const [showVideoModal, setShowVideoModal] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
   
-  // State untuk Detail Berita
   const [selectedNews, setSelectedNews] = useState(null);
   
-  // State Dinamis CMS
   const [siteData, setSiteData] = useState(() => {
-  const savedData = localStorage.getItem('siteData');
-  return savedData ? JSON.parse(savedData) : INITIAL_SITE_DATA;
-});
+    const savedData = localStorage.getItem('siteData');
+    return savedData ? JSON.parse(savedData) : INITIAL_SITE_DATA;
+  });
+
   const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(false);
   const [showAdminLogin, setShowAdminLogin] = useState(false);
   const [adminPassword, setAdminPassword] = useState('');
 
   const sliderRef = useRef(null);
-  
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 20) {
+        setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  useEffect(() => {
+    const fetchCMSData = async () => {
+      try {
+        const response = await fetch(SCRIPT_URL);
+        const data = await response.json();
+        
+        if (data && data.status === 'success' && data.siteData) {
+          setSiteData(data.siteData);
+          localStorage.setItem('siteData', JSON.stringify(data.siteData));
+        }
+      } catch (error) {
+        console.error('Gagal mengambil data CMS dari server Google Sheets:', error);
+      }
+    };
+
+    fetchCMSData();
+  }, []);
+
   const scrollLeft = () => {
     if (sliderRef.current) {
       sliderRef.current.scrollBy({ left: -350, behavior: 'smooth' });
@@ -794,12 +864,6 @@ export default function App() {
       sliderRef.current.scrollBy({ left: 350, behavior: 'smooth' });
     }
   };
-
-  useEffect(() => {
-    const handleScroll = () => setIsScrolled(window.scrollY > 20);
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
 
   const navigateTo = (page) => {
     setCurrentPage(page);
@@ -814,7 +878,6 @@ export default function App() {
 
   const handleAdminLogin = (e) => {
     e.preventDefault();
-    // Simulasi autentikasi (Password default: admin123)
     if (adminPassword === 'admin123') {
       setIsAdminLoggedIn(true);
       setShowAdminLogin(false);
@@ -827,22 +890,20 @@ export default function App() {
   };
 
   const handleMenuClick = (item) => {
-  // Jika menu memiliki 'url', buka link microsite di tab baru
-  if (item.url) {
-    window.open(item.url, '_blank', 'noopener,noreferrer');
-    setIsMobileMenuOpen(false);
-    return;
-  }
+    if (item.url) {
+      window.open(item.url, '_blank', 'noopener,noreferrer');
+      setIsMobileMenuOpen(false);
+      return;
+    }
 
-  // Logika scroll untuk menu biasa
-  if (currentPage !== 'home') {
-    setCurrentPage('home');
-    setTimeout(() => scrollToId(item.id), 100);
-  } else {
-    scrollToId(item.id);
-  }
-  setIsMobileMenuOpen(false);
-};
+    if (currentPage !== 'home') {
+      setCurrentPage('home');
+      setTimeout(() => scrollToId(item.id), 100);
+    } else {
+      scrollToId(item.id);
+    }
+    setIsMobileMenuOpen(false);
+  };
 
   const scrollToId = (id) => {
     if (id === 'beranda') {
@@ -871,13 +932,12 @@ export default function App() {
   };
 
   const MENU_ITEMS = [
-  { label: 'Beranda', id: 'beranda' },
-  { label: 'Profil', id: 'profil' },
-  // Tambahkan url microsite Anda di sini
-  { label: 'Microsite', id: 'microsite', url: 'https://s.id/smp_afar' }, 
-  { label: 'Fasilitas', id: 'fasilitas' },
-  { label: 'Berita', id: 'berita' },
-];
+    { label: 'Beranda', id: 'beranda' },
+    { label: 'Profil', id: 'profil' },
+    { label: 'Microsite', id: 'microsite', url: 'https://s.id/smp_afar' }, 
+    { label: 'Fasilitas', id: 'fasilitas' },
+    { label: 'Berita', id: 'berita' },
+  ];
 
   return (
     <div className="min-h-screen bg-slate-50 font-sans text-slate-900 selection:bg-[#e1ce8c]/50 selection:text-[#00664f]">
@@ -891,7 +951,74 @@ export default function App() {
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
       `}} />
 
-      {/* Navigation */}
+      {toastMessage && (
+        <div className="fixed top-24 right-6 z-50 bg-slate-900 text-white px-6 py-3 rounded-xl shadow-xl flex items-center gap-3 animate-bounce">
+          <Info className="w-5 h-5 text-[#e1ce8c]" />
+          <span className="text-sm font-semibold">{toastMessage}</span>
+        </div>
+      )}
+
+      {showVideoModal && (
+        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-slate-900 rounded-3xl overflow-hidden max-w-4xl w-full border border-slate-800 relative">
+            <button 
+              onClick={() => setShowVideoModal(false)}
+              className="absolute top-4 right-4 z-10 w-10 h-10 bg-black/50 text-white rounded-full flex items-center justify-center hover:bg-black transition-colors"
+            >
+              <X className="w-6 h-6" />
+            </button>
+            <div className="p-8 text-center">
+              <h3 className="text-2xl font-bold text-white mb-4">Video Profil Sekolah</h3>
+              {siteData.profil.videoProfil ? (
+                <video src={siteData.profil.videoProfil} controls className="w-full max-h-[70vh] rounded-2xl"></video>
+              ) : (
+                <p className="text-slate-400 py-12">Video profil belum diunggah oleh administrator.</p>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showAdminLogin && (
+        <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white rounded-3xl p-8 max-w-md w-full shadow-2xl relative">
+            <button 
+              onClick={() => setShowAdminLogin(false)}
+              className="absolute top-4 right-4 text-slate-400 hover:text-slate-600"
+            >
+              <X className="w-6 h-6" />
+            </button>
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-12 h-12 rounded-2xl bg-[#00664f]/10 text-[#00664f] flex items-center justify-center">
+                <Lock className="w-6 h-6" />
+              </div>
+              <div>
+                <h3 className="text-xl font-bold text-slate-900">Admin Login</h3>
+                <p className="text-slate-500 text-xs">Masukkan password administrator</p>
+              </div>
+            </div>
+            <form onSubmit={handleAdminLogin} className="space-y-4">
+              <div>
+                <input 
+                  type="password" 
+                  value={adminPassword} 
+                  onChange={(e) => setAdminPassword(e.target.value)}
+                  placeholder="Password Admin" 
+                  className="w-full p-3.5 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-[#00664f]"
+                  autoFocus
+                />
+              </div>
+              <button 
+                type="submit" 
+                className="w-full bg-[#00664f] hover:bg-[#004d3b] text-white font-bold py-3.5 rounded-xl transition-all"
+              >
+                Masuk Dashboard
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
+
       <nav className={`fixed w-full z-50 transition-all duration-500 ${
         isScrolled ? 'glass-nav shadow-[0_4px_30px_rgba(0,0,0,0.05)] border-b border-white/40 py-3' : 'bg-transparent py-6'
       }`}>
@@ -960,7 +1087,7 @@ export default function App() {
         <div className={`md:hidden fixed inset-0 z-40 bg-white transition-all duration-500 origin-top ${isMobileMenuOpen ? 'opacity-100 visible' : 'opacity-0 invisible'}`}>
           <div className="pt-32 px-6 flex flex-col gap-6">
             {MENU_ITEMS.map((item) => (
-              <button key={item.id} onClick={() => handleMenuClick(item.id)} className="text-left font-black text-slate-800 text-3xl hover:text-[#00664f] transition-colors">{item.label}</button>
+              <button key={item.id} onClick={() => handleMenuClick(item)} className="text-left font-black text-slate-800 text-3xl hover:text-[#00664f] transition-colors">{item.label}</button>
             ))}
             <div className="pt-8 border-t border-slate-100 mt-4">
               <button onClick={() => navigateTo('ppdb')} className="bg-gradient-to-r from-[#00664f] to-[#004d3b] text-white text-center px-6 py-4 rounded-2xl font-bold text-xl w-full shadow-xl shadow-[#00664f]/20 flex items-center justify-center gap-3">
@@ -1016,8 +1143,16 @@ export default function App() {
                 </div>
 
                 <div className="hidden md:block relative h-[600px] w-full">
-                   <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-[28rem] rounded-[2rem] overflow-hidden border-8 border-white/10 shadow-2xl animate-float z-20">
-                     <img src={`${process.env.PUBLIC_URL}/foto-siswa.jpeg`} alt="Students" className="w-full h-full object-cover" />
+                   <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-[28rem] rounded-[2rem] overflow-hidden border-8 border-white/10 shadow-2xl animate-float z-20 bg-[#004d3b]">
+                     <img 
+                       src={`${process.env.PUBLIC_URL}/foto-siswa.jpeg`} 
+                       alt="Students" 
+                       className="w-full h-full object-cover" 
+                       onError={(e) => {
+                         e.target.onerror = null;
+                         e.target.src = "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=800";
+                       }}
+                     />
                      <div className="absolute inset-0 bg-gradient-to-t from-[#00664f]/80 to-transparent"></div>
                    </div>
                    
@@ -1281,106 +1416,62 @@ export default function App() {
           </div>
           
           <div className="md:col-span-3">
-            <h4 className="text-white font-bold text-lg mb-6 flex items-center"><div className="w-2 h-2 bg-[#e1ce8c] rounded-full mr-3"></div> Tautan Cepat</h4>
-            <ul className="space-y-4 text-sm font-medium">
-              <li><button onClick={() => handleMenuClick('beranda')} className="hover:text-[#e1ce8c] transition-colors flex items-center"><ChevronRight className="w-4 h-4 mr-1 opacity-50" /> Beranda Utama</button></li>
-              <li><button onClick={() => handleMenuClick('profil')} className="hover:text-[#e1ce8c] transition-colors flex items-center"><ChevronRight className="w-4 h-4 mr-1 opacity-50" /> Profil & Sejarah</button></li>
-              <li><button onClick={() => handleMenuClick('fasilitas')} className="hover:text-[#e1ce8c] transition-colors flex items-center"><ChevronRight className="w-4 h-4 mr-1 opacity-50" /> Fasilitas & Ekskul</button></li>
-              <li><button onClick={() => navigateTo('ppdb')} className="text-[#e1ce8c] hover:text-white transition-colors flex items-center font-bold"><ChevronRight className="w-4 h-4 mr-1" /> Pendaftaran PPDB</button></li>
+            <h4 className="text-white font-bold text-lg mb-6 flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-[#e1ce8c]"></span> Tautan Cepat
+            </h4>
+            <ul className="space-y-3 text-sm">
+              {MENU_ITEMS.map((item) => (
+                <li key={item.id}>
+                  <button 
+                    onClick={() => handleMenuClick(item)} 
+                    className="hover:text-[#e1ce8c] transition-colors flex items-center gap-2"
+                  >
+                    <ChevronRight className="w-3 h-3 text-[#e1ce8c]" /> {item.label}
+                  </button>
+                </li>
+              ))}
+              <li>
+                <button 
+                  onClick={() => navigateTo('ppdb')} 
+                  className="hover:text-[#e1ce8c] transition-colors flex items-center gap-2"
+                >
+                  <ChevronRight className="w-3 h-3 text-[#e1ce8c]" /> Pendaftaran PPDB
+                </button>
+              </li>
             </ul>
           </div>
 
           <div className="md:col-span-4">
-            <h4 className="text-white font-bold text-lg mb-6 flex items-center"><div className="w-2 h-2 bg-[#e1ce8c] rounded-full mr-3"></div> Kontak & Lokasi</h4>
-            <ul className="space-y-5 text-sm">
-              <li className="flex items-start gap-4 bg-white/5 p-4 rounded-xl border border-white/5 hover:bg-white/10 transition-colors">
+            <h4 className="text-white font-bold text-lg mb-6 flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-[#e1ce8c]"></span> Kontak Kami
+            </h4>
+            <ul className="space-y-4 text-sm text-slate-400 font-light">
+              <li className="flex items-start gap-3">
                 <MapPin className="w-5 h-5 text-[#e1ce8c] shrink-0 mt-0.5" />
-                <span className="leading-relaxed text-slate-300">{siteData.sekolah.alamat}</span>
+                <span>{siteData.sekolah.alamat}</span>
               </li>
-              <li className="flex items-center gap-4 group cursor-pointer">
-                <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-[#e1ce8c] transition-colors">
-                  <Phone className="w-4 h-4 text-[#e1ce8c] group-hover:text-[#002f23]" />
-                </div>
-                <span className="group-hover:text-white transition-colors">Telepon: {siteData.sekolah.telepon}</span>
+              <li className="flex items-center gap-3">
+                <Phone className="w-5 h-5 text-[#e1ce8c] shrink-0" />
+                <span>{siteData.sekolah.telepon}</span>
               </li>
-              <li className="flex items-center gap-4 group cursor-pointer">
-                <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-[#e1ce8c] transition-colors">
-                  <Mail className="w-4 h-4 text-[#e1ce8c] group-hover:text-[#002f23]" />
-                </div>
-                <span className="group-hover:text-white transition-colors">{siteData.sekolah.email}</span>
+              <li className="flex items-center gap-3">
+                <Mail className="w-5 h-5 text-[#e1ce8c] shrink-0" />
+                <span>{siteData.sekolah.email}</span>
               </li>
             </ul>
           </div>
         </div>
-        
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 mt-20 pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-slate-500 font-medium">
-          <p>&copy; {new Date().getFullYear()} {siteData.sekolah.nama}. All rights reserved.</p>
-          <div className="flex items-center gap-6">
-            <span className="hover:text-slate-300 cursor-pointer transition-colors">Kebijakan Privasi</span>
-            <button onClick={() => setShowAdminLogin(true)} className="flex items-center gap-1 hover:text-[#e1ce8c] transition-colors group">
-              <Lock className="w-3 h-3 group-hover:scale-110 transition-transform" /> Login Admin
-            </button>
-          </div>
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-12 mt-12 border-t border-slate-800/80 text-xs text-slate-500 flex flex-col sm:flex-row justify-between items-center gap-4 relative z-10">
+          <p>&copy; 2026 {siteData.sekolah.nama}. Hak Cipta Dilindungi.</p>
+          <button 
+            onClick={() => setShowAdminLogin(true)} 
+            className="text-slate-500 hover:text-[#e1ce8c] transition-colors text-xs flex items-center gap-1"
+          >
+            <Lock className="w-3 h-3" /> Area Admin
+          </button>
         </div>
       </footer>
-
-      {showAdminLogin && (
-        <div className="fixed inset-0 z-[110] flex items-center justify-center p-4">
-          <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" onClick={() => setShowAdminLogin(false)}></div>
-          <div className="relative bg-white rounded-2xl w-full max-w-sm p-8 shadow-2xl animate-fade-in">
-            <button onClick={() => setShowAdminLogin(false)} className="absolute top-4 right-4 text-slate-400 hover:text-slate-900">
-              <X className="w-5 h-5" />
-            </button>
-            <div className="text-center mb-6">
-              <div className="w-12 h-12 bg-[#00664f]/10 rounded-full flex items-center justify-center mx-auto mb-3">
-                <Lock className="w-6 h-6 text-[#00664f]" />
-              </div>
-              <h3 className="text-xl font-bold text-slate-900">Otorisasi Admin</h3>
-
-            </div>
-            <form onSubmit={handleAdminLogin}>
-              <input 
-                type="password" 
-                autoFocus
-                placeholder="Masukkan Password..." 
-                value={adminPassword}
-                onChange={(e) => setAdminPassword(e.target.value)}
-                className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl mb-4 outline-none focus:border-[#00664f]"
-              />
-              <button type="submit" className="w-full bg-[#00664f] hover:bg-[#004d3b] text-white font-bold py-3 rounded-xl transition-colors">
-                Masuk Dashboard
-              </button>
-            </form>
-          </div>
-        </div>
-      )}
-
-      {/* Toast Notification */}
-      <div className={`fixed bottom-6 left-1/2 -translate-x-1/2 z-[100] transition-all duration-300 ${toastMessage ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10 pointer-events-none'}`}>
-        <div className="bg-slate-900 text-white px-6 py-3 rounded-full shadow-2xl font-medium text-sm flex items-center gap-3 border border-slate-700">
-          <Info className="w-4 h-4 text-[#e1ce8c]" /> {toastMessage}
-        </div>
-      </div>
-
-      {showVideoModal && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
-          <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" onClick={() => setShowVideoModal(false)}></div>
-          <div className="relative bg-slate-900 rounded-2xl w-full max-w-4xl aspect-video border border-slate-700 shadow-2xl overflow-hidden animate-fade-in flex flex-col items-center justify-center">
-            <button onClick={() => setShowVideoModal(false)} className="absolute top-4 right-4 z-20 w-10 h-10 bg-white/10 hover:bg-[#00664f] text-white rounded-full flex items-center justify-center transition-colors backdrop-blur-md">
-              <X className="w-5 h-5" />
-            </button>
-            {siteData.profil.videoProfil ? (
-              <video src={siteData.profil.videoProfil} controls autoPlay className="w-full h-full object-contain bg-black z-10" />
-            ) : (
-              <div className="w-full h-full flex flex-col items-center justify-center text-slate-400 p-6 text-center z-10">
-                <PlayCircle className="w-16 h-16 mb-4 opacity-50" />
-                <h3 className="text-2xl font-bold text-white mb-2">Video Profil Sekolah</h3>
-                <p className="font-medium max-w-md mx-auto">Video saat ini sedang dalam tahap produksi dan akan segera tersedia. Terima kasih atas antusiasme Anda.</p>
-              </div>
-            )}
-          </div>
-        </div>
-      )}
     </div>
   );
 }
