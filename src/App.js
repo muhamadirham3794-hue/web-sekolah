@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { 
-  Menu, X, ChevronRight, ChevronLeft, GraduationCap, BookOpen, Users, Award, 
+  Menu, X, ChevronRight, ChevronLeft, BookOpen, Users, Award, 
   MapPin, Phone, Mail, ArrowRight, CheckCircle, Shield, Quote, 
-  Calendar, ArrowUpRight, Monitor, Library, Heart, Activity, 
+  Calendar, ArrowUpRight, Monitor, Heart, Activity, 
   Star, PlayCircle, Sparkles, Target, Laptop, Info,
   Lock, Edit3, Save, LogOut, Settings, Plus, Trash2
 } from 'lucide-react';
 
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwjtR8bE7qOhJ01yC5NCgjnD1QvM_8eJGV_UMvIxND89SQUadLaUh-odljRPG15p8eO2g/exec";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbztbHuE_8kyE6Tn2fha_Sh1llX68KeFiGiRWdG9nOqnCpfOfQsNqpspHwkLGC0W5ySt3g/exec";
 
 const FEATURES = [
   {
@@ -49,14 +49,14 @@ const FASILITAS = [
   },
   {
     title: "Masjid Utama",
-    desc: "Pusat kegiatan ibadah.",
+    desc: "Pusat kegiatan ibadah dan pembinaan spiritual.",
     image: "https://images.unsplash.com/photo-1584553421349-355dbcb32ee8?q=80&w=600",
     colSpan: "md:col-span-1",
     rowSpan: "md:row-span-1"
   },
   {
     title: "Lapangan Olahraga",
-    desc: "Fasilitas olahraga terpadu.",
+    desc: "Fasilitas olahraga terpadu untuk kebugaran siswa.",
     image: "https://images.unsplash.com/photo-1526676037777-05a232554f77?q=80&w=600",
     colSpan: "md:col-span-1",
     rowSpan: "md:row-span-1"
@@ -70,7 +70,7 @@ const LATEST_NEWS = [
     date: "01 Agustus 2026",
     category: "Pengumuman",
     image: "https://images.unsplash.com/photo-1577896851231-70ef18881754?q=80&w=600",
-    content: "Alhamdulillah, pendaftaran Peserta Didik Baru (PPDB) SMP Al-Fathonah Arjasari Gelombang 1 telah resmi dibuka. Kami mengundang putra-putri terbaik bangsa untuk bergabung bersama kami dalam mencetak generasi cerdas, berakhlak mulia, dan berwawasan global.\n\nPendaftaran dapat dilakukan secara online melalui website resmi ini atau datang langsung ke sekretariat pendaftaran di kampus SMP Al-Fathonah Arjasari. Berbagai kemudahan dan program beasiswa tersedia bagi calon siswa yang berprestasi dan memenuhi syarat tertentu.\n\nJangan lewatkan kesempatan berharga ini. Kuota terbatas! Segera daftarkan diri Anda dan raih masa depan gemilang bersama SMP Al-Fathonah Arjasari."
+    content: "Alhamdulillah, pendaftaran Peserta Didik Baru (PPDB) SMP Al-Fathonah Arjasari Gelombang 1 telah resmi dibuka. Kami mengundang putra-putri terbaik bangsa untuk bergabung bersama kami dalam mencetak generasi cerdas, berakhlak mulia, dan berwawasan global.\n\nPendaftaran dapat dilakukan secara online melalui website resmi ini atau datang langsung ke sekretariat pendaftaran di kampus SMP Al-Fathonah Arjasari.\n\nJangan lewatkan kesempatan berharga ini. Kuota terbatas! Segera daftarkan diri Anda dan raih masa depan gemilang bersama SMP Al-Fathonah Arjasari."
   },
   {
     id: 2,
@@ -78,7 +78,7 @@ const LATEST_NEWS = [
     date: "15 Juli 2026",
     category: "Prestasi",
     image: "https://images.unsplash.com/photo-1532094349884-543bc11b234d?q=80&w=600",
-    content: "Prestasi membanggakan kembali ditorehkan oleh siswa SMP Al-Fathonah Arjasari. Ananda Muhammad Fatih, siswa kelas VIII, berhasil meraih medali emas pada ajang Olimpiade Sains Nasional (OSN) tingkat Kabupaten Tasikmalaya di bidang Matematika.\n\nKeberhasilan ini tidak lepas dari kerja keras, ketekunan, dan doa dari seluruh civitas akademika, serta bimbingan intensif dari para guru pembina OSN. Prestasi ini semakin memotivasi kami untuk terus memberikan pendampingan terbaik bagi para siswa agar mampu bersaing di tingkat provinsi maupun nasional.\n\nSelamat kepada Ananda Fatih! Semoga prestasi ini menjadi inspirasi bagi siswa-siswi lainnya untuk terus berprestasi dan mengharumkan nama sekolah."
+    content: "Prestasi membanggakan kembali ditorehkan oleh siswa SMP Al-Fathonah Arjasari. Ananda Muhammad Fatih, siswa kelas VIII, berhasil meraih medali emas pada ajang Olimpiade Sains Nasional (OSN) tingkat Kabupaten Tasikmalaya di bidang Matematika.\n\nKeberhasilan ini tidak lepas dari kerja keras, ketekunan, dan doa dari seluruh civitas akademika, serta bimbingan intensif dari para guru pembina OSN."
   },
   {
     id: 3,
@@ -86,7 +86,7 @@ const LATEST_NEWS = [
     date: "20 Maret 2026",
     category: "Kegiatan",
     image: "https://images.unsplash.com/photo-1584553421349-355dbcb32ee8?q=80&w=600",
-    content: "Menyambut bulan suci Ramadhan, SMP Al-Fathonah Arjasari akan menyelenggarakan kegiatan Pesantren Kilat (Sanlat) yang wajib diikuti oleh seluruh siswa kelas VII hingga IX. Kegiatan ini bertujuan untuk meningkatkan keimanan, ketakwaan, dan pemahaman agama Islam para siswa.\n\nSanlat akan berlangsung selama 3 hari berturut-turut dengan berbagai agenda menarik seperti kajian keislaman, tahfidz Al-Quran, praktik ibadah, dan diakhiri dengan buka puasa bersama serta shalat tarawih berjamaah.\n\nKami berharap melalui kegiatan ini, para siswa dapat mengisi bulan Ramadhan dengan aktivitas yang bermanfaat dan penuh keberkahan. Mari bersama-sama kita raih pahala berlimpah di bulan suci ini."
+    content: "Menyambut bulan suci Ramadhan, SMP Al-Fathonah Arjasari akan menyelenggarakan kegiatan Pesantren Kilat (Sanlat) yang wajib diikuti oleh seluruh siswa kelas VII hingga IX. Kegiatan ini bertujuan untuk meningkatkan keimanan, ketakwaan, dan pemahaman agama Islam para siswa."
   }
 ];
 
@@ -144,7 +144,7 @@ const NewsDetail = ({ news, onBack }) => {
       <div className="max-w-4xl mx-auto">
         <button 
           onClick={onBack}
-          className="mb-8 text-slate-500 hover:text-[#00664f] font-medium flex items-center gap-2 transition-all group bg-white py-2.5 px-5 rounded-full shadow-sm w-fit border border-slate-100 hover:shadow-md"
+          className="mb-8 text-slate-500 hover:text-[#00664f] font-medium flex items-center gap-2 transition-all group bg-white py-2.5 px-5 rounded-full shadow-sm w-fit border border-slate-100 hover:shadow-md cursor-pointer"
         >
           <ChevronRight className="w-4 h-4 rotate-180 group-hover:-translate-x-1 transition-transform" /> 
           Kembali ke Berita
@@ -176,7 +176,7 @@ const NewsDetail = ({ news, onBack }) => {
               {news.title}
             </h1>
             
-            <div className="prose prose-slate md:prose-lg max-w-none prose-headings:text-[#00664f] prose-a:text-[#00664f]">
+            <div className="prose prose-slate md:prose-lg max-w-none">
               {news.content ? news.content.split('\n').map((paragraph, idx) => (
                 <p key={idx} className="mb-5 text-slate-600 leading-relaxed">
                   {paragraph}
@@ -201,7 +201,7 @@ const FormPPDB = ({ setCurrentPage, siteData }) => {
   const [formData, setFormData] = useState({
     namaLengkap: '', nisn: '', tempatLahir: '', tanggalLahir: '',
     jenisKelamin: '', agama: '', alamatLengkap: '', asalSekolah: '',
-    tahunLulus: '', namaOrtu: '', pekerjaanOrtu: '', noWhatsapp: ''
+    tahunLulus: '', namaOrangTua: '', pekerjaanOrangTua: '', noWhatsapp: ''
   });
   const [status, setStatus] = useState('idle'); 
   const [regNumber, setRegNumber] = useState('');
@@ -227,9 +227,7 @@ const FormPPDB = ({ setCurrentPage, siteData }) => {
     try {
       await fetch(SCRIPT_URL, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'text/plain;charset=utf-8',
-        },
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
         body: JSON.stringify(dataPayload),
         redirect: 'follow'
       });
@@ -239,8 +237,8 @@ const FormPPDB = ({ setCurrentPage, siteData }) => {
 
     } catch (error) {
       console.error("Error submitting form:", error);
-      alert("Terjadi kesalahan koneksi. Data disimpan secara lokal.");
       setStatus('success');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
 
@@ -252,7 +250,7 @@ const FormPPDB = ({ setCurrentPage, siteData }) => {
       <div className="max-w-4xl mx-auto">
         <button 
           onClick={() => { setCurrentPage('home'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-          className="mb-8 text-slate-500 hover:text-[#00664f] font-medium flex items-center gap-2 transition-all group bg-white py-2.5 px-5 rounded-full shadow-sm w-fit border border-slate-100 hover:shadow-md"
+          className="mb-8 text-slate-500 hover:text-[#00664f] font-medium flex items-center gap-2 transition-all group bg-white py-2.5 px-5 rounded-full shadow-sm w-fit border border-slate-100 hover:shadow-md cursor-pointer"
         >
           <ChevronRight className="w-4 h-4 rotate-180 group-hover:-translate-x-1 transition-transform" /> 
           Kembali ke Beranda
@@ -265,7 +263,7 @@ const FormPPDB = ({ setCurrentPage, siteData }) => {
              </div>
              <div className="relative z-10">
                 <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md text-[#e1ce8c] text-xs font-bold px-4 py-2 rounded-full mb-6 border border-white/20">
-                  <Sparkles className="w-4 h-4" /> Tahun Ajaran {siteData.sekolah.tahunPelajaran}
+                  <Sparkles className="w-4 h-4" /> Tahun Ajaran {siteData?.sekolah?.tahunPelajaran}
                 </div>
                 <h2 className="text-3xl md:text-5xl font-black mb-4 tracking-tight">Formulir Pendaftaran</h2>
                 <p className="text-slate-200 max-w-xl text-sm md:text-base leading-relaxed font-light">
@@ -296,8 +294,8 @@ const FormPPDB = ({ setCurrentPage, siteData }) => {
                 </div>
                 <div>
                   <button 
-                    onClick={() => { setStatus('idle'); setFormData({ namaLengkap: '', nisn: '', tempatLahir: '', tanggalLahir: '', jenisKelamin: '', agama: '', alamatLengkap: '', asalSekolah: '', tahunLulus: '', namaOrtu: '', pekerjaanOrtu: '', noWhatsapp: '' }); }} 
-                    className="text-[#00664f] font-bold hover:text-[#004d3b] flex items-center justify-center gap-2 mx-auto group"
+                    onClick={() => { setStatus('idle'); setFormData({ namaLengkap: '', nisn: '', tempatLahir: '', tanggalLahir: '', jenisKelamin: '', agama: '', alamatLengkap: '', asalSekolah: '', tahunLulus: '', namaOrangTua: '', pekerjaanOrangTua: '', noWhatsapp: '' }); }} 
+                    className="text-[#00664f] font-bold hover:text-[#004d3b] flex items-center justify-center gap-2 mx-auto group cursor-pointer"
                   >
                     Daftarkan Siswa Lainnya <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                   </button>
@@ -334,7 +332,7 @@ const FormPPDB = ({ setCurrentPage, siteData }) => {
                     <div className="space-y-2">
                       <label className="text-sm font-semibold text-slate-700">Jenis Kelamin <span className="text-red-500">*</span></label>
                       <select required name="jenisKelamin" value={formData.jenisKelamin} onChange={handleInputChange} 
-                        className="w-full px-5 py-3.5 rounded-xl border border-slate-200 focus:border-[#00664f] focus:ring-4 focus:ring-[#00664f]/10 outline-none transition-all bg-slate-50 focus:bg-white text-slate-700 appearance-none">
+                        className="w-full px-5 py-3.5 rounded-xl border border-slate-200 focus:border-[#00664f] focus:ring-4 focus:ring-[#00664f]/10 outline-none transition-all bg-slate-50 focus:bg-white text-slate-700">
                         <option value="">Pilih Jenis Kelamin...</option>
                         <option value="Laki-laki">Laki-laki</option>
                         <option value="Perempuan">Perempuan</option>
@@ -343,7 +341,7 @@ const FormPPDB = ({ setCurrentPage, siteData }) => {
                     <div className="space-y-2">
                       <label className="text-sm font-semibold text-slate-700">Agama <span className="text-red-500">*</span></label>
                       <select required name="agama" value={formData.agama} onChange={handleInputChange} 
-                        className="w-full px-5 py-3.5 rounded-xl border border-slate-200 focus:border-[#00664f] focus:ring-4 focus:ring-[#00664f]/10 outline-none transition-all bg-slate-50 focus:bg-white text-slate-700 appearance-none">
+                        className="w-full px-5 py-3.5 rounded-xl border border-slate-200 focus:border-[#00664f] focus:ring-4 focus:ring-[#00664f]/10 outline-none transition-all bg-slate-50 focus:bg-white text-slate-700">
                         <option value="">Pilih Agama...</option>
                         <option value="Islam">Islam</option>
                         <option value="Lainnya">Lainnya</option>
@@ -384,12 +382,12 @@ const FormPPDB = ({ setCurrentPage, siteData }) => {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-2 md:col-span-2">
                       <label className="text-sm font-semibold text-slate-700">Nama Orang Tua / Wali <span className="text-red-500">*</span></label>
-                      <input required type="text" name="namaOrtu" value={formData.namaOrtu} onChange={handleInputChange} placeholder="Sesuai KTP" 
+                      <input required type="text" name="namaOrangTua" value={formData.namaOrangTua} onChange={handleInputChange} placeholder="Sesuai KTP" 
                         className="w-full px-5 py-3.5 rounded-xl border border-slate-200 focus:border-[#00664f] focus:ring-4 focus:ring-[#00664f]/10 outline-none transition-all bg-slate-50 focus:bg-white" />
                     </div>
                     <div className="space-y-2">
                       <label className="text-sm font-semibold text-slate-700">Pekerjaan <span className="text-red-500">*</span></label>
-                      <input required type="text" name="pekerjaanOrtu" value={formData.pekerjaanOrtu} onChange={handleInputChange} placeholder="Contoh: Wiraswasta, PNS, Petani" 
+                      <input required type="text" name="pekerjaanOrangTua" value={formData.pekerjaanOrangTua} onChange={handleInputChange} placeholder="Contoh: Wiraswasta, PNS, Petani" 
                         className="w-full px-5 py-3.5 rounded-xl border border-slate-200 focus:border-[#00664f] focus:ring-4 focus:ring-[#00664f]/10 outline-none transition-all bg-slate-50 focus:bg-white" />
                     </div>
                     <div className="space-y-2">
@@ -404,7 +402,7 @@ const FormPPDB = ({ setCurrentPage, siteData }) => {
                   <button 
                     type="submit" 
                     disabled={status === 'loading'}
-                    className="w-full bg-[#00664f] hover:bg-[#004d3b] disabled:bg-slate-400 text-white font-bold py-4 rounded-xl transition-all shadow-xl shadow-[#00664f]/20 flex justify-center items-center gap-3 text-lg hover:-translate-y-1"
+                    className="w-full bg-[#00664f] hover:bg-[#004d3b] disabled:bg-slate-400 text-white font-bold py-4 rounded-xl transition-all shadow-xl shadow-[#00664f]/20 flex justify-center items-center gap-3 text-lg hover:-translate-y-1 cursor-pointer"
                   >
                     {status === 'loading' ? (
                       <>
@@ -429,94 +427,42 @@ const FormPPDB = ({ setCurrentPage, siteData }) => {
 };
 
 const AdminDashboard = ({ siteData, setSiteData, showToast, onLogout }) => {
-  const [localData, setLocalData] = useState(siteData);
+  const [localData, setLocalData] = useState(siteData || {});
   const [loading, setLoading] = useState(false);
 
-  const processImageUpload = (e, callback) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        const img = new Image();
-        img.onload = () => {
-          const canvas = document.createElement('canvas');
-          const MAX_WIDTH = 800;
-          const MAX_HEIGHT = 800;
-          let width = img.width;
-          let height = img.height;
-
-          if (width > height) {
-            if (width > MAX_WIDTH) {
-              height *= MAX_WIDTH / width;
-              width = MAX_WIDTH;
-            }
-          } else {
-            if (height > MAX_HEIGHT) {
-              width *= MAX_HEIGHT / height;
-              height = MAX_HEIGHT;
-            }
-          }
-
-          canvas.width = width;
-          canvas.height = height;
-          const ctx = canvas.getContext('2d');
-          ctx.drawImage(img, 0, 0, width, height);
-
-          const compressedBase64 = canvas.toDataURL('image/jpeg', 0.7);
-          callback(compressedBase64);
-        };
-        img.src = event.target.result;
-      };
-      reader.readAsDataURL(file);
+  useEffect(() => {
+    if (siteData) {
+      setLocalData(siteData);
     }
-  };
-
-  const processVideoUpload = (e, callback) => {
-    const file = e.target.files[0];
-    if (file) {
-      if (file.size > 100 * 1024 * 1024) {
-        showToast('Ukuran video terlalu besar. Maksimal 100MB.');
-        return;
-      }
-      const videoUrl = URL.createObjectURL(file);
-      callback(videoUrl);
-    }
-  };
+  }, [siteData]);
 
   const updateArrayItem = (arrayName, index, field, value) => {
-    const newArray = [...localData[arrayName]];
-    newArray[index] = { ...newArray[index], [field]: value };
-    setLocalData({ ...localData, [arrayName]: newArray });
+    const currentArray = [...(localData[arrayName] || [])];
+    currentArray[index] = { ...currentArray[index], [field]: value };
+    setLocalData({ ...localData, [arrayName]: currentArray });
   };
 
-  const addNewTeacher = () => {
-    setLocalData(prev => ({
-      ...prev,
-      guru: [...prev.guru, { id: Date.now(), name: '', role: '', image: '' }]
-    }));
-    showToast('Form guru baru ditambahkan. Silakan isi data.');
+  const addItem = (arrayName, newItem) => {
+    const currentArray = [...(localData[arrayName] || [])];
+    setLocalData({ ...localData, [arrayName]: [...currentArray, newItem] });
+    showToast(`Data baru berhasil ditambahkan!`);
   };
 
-  const removeTeacher = (index) => {
-    const newGuru = [...localData.guru];
-    newGuru.splice(index, 1);
-    setLocalData(prev => ({ ...prev, guru: newGuru }));
-    showToast('Data guru dihapus.');
+  const removeItem = (arrayName, index) => {
+    const currentArray = [...(localData[arrayName] || [])];
+    currentArray.splice(index, 1);
+    setLocalData({ ...localData, [arrayName]: currentArray });
+    showToast(`Data berhasil dihapus.`);
   };
 
   const handleSave = async () => {
     setLoading(true);
     try {
-      const payload = {
-        action: 'SAVE_CMS',
-        data: localData
-      };
+      const payload = { action: 'SAVE_CMS', data: localData };
 
       const response = await fetch(SCRIPT_URL, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'text/plain;charset=utf-8'
-        },
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
         body: JSON.stringify(payload),
         redirect: 'follow'
       });
@@ -526,15 +472,15 @@ const AdminDashboard = ({ siteData, setSiteData, showToast, onLogout }) => {
       if (result.status === 'success') {
         setSiteData(localData);
         localStorage.setItem('siteData', JSON.stringify(localData));
-        showToast('Perubahan berhasil disimpan ke Google Sheets!');
+        showToast('Perubahan berhasil disimpan ke Cloud & Google Sheets!');
       } else {
-        showToast('Gagal menyimpan: ' + (result.message || 'Respon tidak valid'));
+        showToast('Gagal menyimpan ke server: ' + (result.message || 'Respon tidak valid'));
       }
     } catch (error) {
       console.error('Error saving data:', error);
       setSiteData(localData);
       localStorage.setItem('siteData', JSON.stringify(localData));
-      showToast('Perubahan disimpan secara lokal di browser.');
+      showToast('Koneksi terputus. Perubahan disimpan lokal di browser Anda.');
     } finally {
       setLoading(false);
     }
@@ -548,58 +494,73 @@ const AdminDashboard = ({ siteData, setSiteData, showToast, onLogout }) => {
             <h2 className="text-2xl font-black text-slate-900 flex items-center gap-2">
               <Settings className="text-[#00664f]" /> CMS Admin Dashboard
             </h2>
-            <p className="text-slate-500 text-sm">Kelola konten website secara real-time.</p>
+            <p className="text-slate-500 text-sm">Kelola seluruh konten website secara real-time.</p>
           </div>
-          <button onClick={onLogout} className="flex items-center gap-2 px-4 py-2 bg-red-50 text-red-600 rounded-lg font-bold hover:bg-red-100 transition-colors">
+          <button onClick={onLogout} className="flex items-center gap-2 px-4 py-2 bg-red-50 text-red-600 rounded-lg font-bold hover:bg-red-100 transition-colors cursor-pointer">
             <LogOut className="w-4 h-4" /> Keluar
           </button>
         </div>
 
         <div className="space-y-6">
           <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-200">
-            <h3 className="text-lg font-bold text-slate-800 mb-4 border-b pb-2 flex items-center gap-2"><Edit3 className="w-5 h-5"/> Identitas & Kontak Sekolah</h3>
+            <h3 className="text-lg font-bold text-slate-800 mb-4 border-b pb-2 flex items-center gap-2">
+              <Edit3 className="w-5 h-5 text-[#00664f]"/> Identitas & Kontak Sekolah
+            </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-semibold text-slate-600 mb-1">Nama Sekolah</label>
-                <input type="text" value={localData.sekolah.nama} onChange={e => setLocalData({...localData, sekolah: {...localData.sekolah, nama: e.target.value}})} className="w-full p-3 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:border-[#00664f]" />
+                <input type="text" value={localData?.sekolah?.nama || ''} onChange={e => setLocalData({...localData, sekolah: {...localData.sekolah, nama: e.target.value}})} className="w-full p-3 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:border-[#00664f]" />
               </div>
               <div>
                 <label className="block text-sm font-semibold text-slate-600 mb-1">NPSN</label>
-                <input type="text" value={localData.sekolah.npsn} onChange={e => setLocalData({...localData, sekolah: {...localData.sekolah, npsn: e.target.value}})} className="w-full p-3 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:border-[#00664f]" />
+                <input type="text" value={localData?.sekolah?.npsn || ''} onChange={e => setLocalData({...localData, sekolah: {...localData.sekolah, npsn: e.target.value}})} className="w-full p-3 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:border-[#00664f]" />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-slate-600 mb-1">Nomor Telepon / WA</label>
+                <input type="text" value={localData?.sekolah?.telepon || ''} onChange={e => setLocalData({...localData, sekolah: {...localData.sekolah, telepon: e.target.value}})} className="w-full p-3 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:border-[#00664f]" placeholder="(+62) 822-xxxx-xxxx" />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-slate-600 mb-1">Email Sekolah</label>
+                <input type="email" value={localData?.sekolah?.email || ''} onChange={e => setLocalData({...localData, sekolah: {...localData.sekolah, email: e.target.value}})} className="w-full p-3 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:border-[#00664f]" placeholder="sekolah@gmail.com" />
               </div>
               <div>
                 <label className="block text-sm font-semibold text-slate-600 mb-1">Lokasi Singkat</label>
-                <input type="text" value={localData.sekolah.lokasi} onChange={e => setLocalData({...localData, sekolah: {...localData.sekolah, lokasi: e.target.value}})} className="w-full p-3 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:border-[#00664f]" />
+                <input type="text" value={localData?.sekolah?.lokasi || ''} onChange={e => setLocalData({...localData, sekolah: {...localData.sekolah, lokasi: e.target.value}})} className="w-full p-3 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:border-[#00664f]" />
               </div>
               <div>
                 <label className="block text-sm font-semibold text-slate-600 mb-1">Tahun Pelajaran Saat Ini</label>
-                <input type="text" value={localData.sekolah.tahunPelajaran} onChange={e => setLocalData({...localData, sekolah: {...localData.sekolah, tahunPelajaran: e.target.value}})} className="w-full p-3 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:border-[#00664f]" placeholder="Contoh: 2026/2027" />
+                <input type="text" value={localData?.sekolah?.tahunPelajaran || ''} onChange={e => setLocalData({...localData, sekolah: {...localData.sekolah, tahunPelajaran: e.target.value}})} className="w-full p-3 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:border-[#00664f]" placeholder="Contoh: 2026/2027" />
               </div>
               <div>
                 <label className="block text-sm font-semibold text-slate-600 mb-1">Akreditasi</label>
-                <input type="text" value={localData.sekolah.akreditasi} onChange={e => setLocalData({...localData, sekolah: {...localData.sekolah, akreditasi: e.target.value}})} className="w-full p-3 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:border-[#00664f]" />
+                <input type="text" value={localData?.sekolah?.akreditasi || ''} onChange={e => setLocalData({...localData, sekolah: {...localData.sekolah, akreditasi: e.target.value}})} className="w-full p-3 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:border-[#00664f]" />
               </div>
               <div>
                 <label className="block text-sm font-semibold text-slate-600 mb-1">Total Siswa Aktif</label>
-                <input type="text" value={localData.sekolah.totalSiswa} onChange={e => setLocalData({...localData, sekolah: {...localData.sekolah, totalSiswa: e.target.value}})} className="w-full p-3 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:border-[#00664f]" />
+                <input type="text" value={localData?.sekolah?.totalSiswa || ''} onChange={e => setLocalData({...localData, sekolah: {...localData.sekolah, totalSiswa: e.target.value}})} className="w-full p-3 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:border-[#00664f]" />
               </div>
               <div className="md:col-span-2">
                 <label className="block text-sm font-semibold text-slate-600 mb-1">Alamat Lengkap</label>
-                <input type="text" value={localData.sekolah.alamat} onChange={e => setLocalData({...localData, sekolah: {...localData.sekolah, alamat: e.target.value}})} className="w-full p-3 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:border-[#00664f]" />
+                <input type="text" value={localData?.sekolah?.alamat || ''} onChange={e => setLocalData({...localData, sekolah: {...localData.sekolah, alamat: e.target.value}})} className="w-full p-3 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:border-[#00664f]" />
               </div>
               <div className="md:col-span-2 pt-4 border-t border-slate-100">
-                <label className="block text-sm font-semibold text-slate-600 mb-2">Logo Sekolah</label>
-                <div className="flex items-center gap-6">
-                  <div className="w-20 h-20 bg-slate-100 border-2 border-dashed border-slate-300 rounded-xl flex items-center justify-center overflow-hidden shrink-0">
-                    {localData.sekolah.logo ? (
-                      <img src={localData.sekolah.logo} alt="Logo" className="w-full h-full object-contain p-2" />
+                <label className="block text-sm font-semibold text-slate-600 mb-2">Link Logo Sekolah</label>
+                <div className="flex items-center gap-4">
+                  <div className="w-16 h-16 bg-slate-100 border border-slate-200 rounded-xl flex items-center justify-center overflow-hidden shrink-0">
+                    {localData?.sekolah?.logo ? (
+                      <img src={localData?.sekolah?.logo} alt="Logo" className="w-full h-full object-contain p-2" />
                     ) : (
-                      <span className="text-xs text-slate-400 text-center px-2">Belum ada logo</span>
+                      <span className="text-xs text-slate-400 text-center px-2">No Logo</span>
                     )}
                   </div>
                   <div className="flex-1">
-                    <input type="file" accept="image/*" onChange={(e) => processImageUpload(e, (base64) => setLocalData({...localData, sekolah: {...localData.sekolah, logo: base64}}))} className="w-full text-sm text-slate-500 file:mr-4 file:py-2.5 file:px-6 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-[#00664f]/10 file:text-[#00664f] hover:file:bg-[#00664f]/20 transition-colors cursor-pointer" />
-                    <p className="text-xs text-slate-500 mt-2">Format: JPG, PNG, atau SVG (Maks. 2MB).</p>
+                    <input 
+                      type="text" 
+                      value={localData?.sekolah?.logo || ''} 
+                      onChange={e => setLocalData({...localData, sekolah: {...localData.sekolah, logo: e.target.value}})} 
+                      placeholder="Masukkan URL Logo Gambar (https://...)" 
+                      className="w-full p-3 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:border-[#00664f] text-sm" 
+                    />
                   </div>
                 </div>
               </div>
@@ -607,89 +568,107 @@ const AdminDashboard = ({ siteData, setSiteData, showToast, onLogout }) => {
           </div>
 
           <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-200">
-            <h3 className="text-lg font-bold text-slate-800 mb-4 border-b pb-2 flex items-center gap-2"><Edit3 className="w-5 h-5"/> Teks Beranda (Hero)</h3>
+            <h3 className="text-lg font-bold text-slate-800 mb-4 border-b pb-2 flex items-center gap-2">
+              <Edit3 className="w-5 h-5 text-[#00664f]"/> Teks Beranda (Hero)
+            </h3>
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-semibold text-slate-600 mb-1">Tagline Atas</label>
-                <input type="text" value={localData.hero.tagline} onChange={e => setLocalData({...localData, hero: {...localData.hero, tagline: e.target.value}})} className="w-full p-3 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:border-[#00664f]" />
+                <input type="text" value={localData?.hero?.tagline || ''} onChange={e => setLocalData({...localData, hero: {...localData.hero, tagline: e.target.value}})} className="w-full p-3 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:border-[#00664f]" />
               </div>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-semibold text-slate-600 mb-1">Judul Utama (Baris 1)</label>
-                  <input type="text" value={localData.hero.title1} onChange={e => setLocalData({...localData, hero: {...localData.hero, title1: e.target.value}})} className="w-full p-3 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:border-[#00664f]" />
+                  <input type="text" value={localData?.hero?.title1 || ''} onChange={e => setLocalData({...localData, hero: {...localData.hero, title1: e.target.value}})} className="w-full p-3 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:border-[#00664f]" />
                 </div>
                 <div>
                   <label className="block text-sm font-semibold text-slate-600 mb-1">Judul Utama (Baris 2 - Emas)</label>
-                  <input type="text" value={localData.hero.title2} onChange={e => setLocalData({...localData, hero: {...localData.hero, title2: e.target.value}})} className="w-full p-3 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:border-[#00664f]" />
+                  <input type="text" value={localData?.hero?.title2 || ''} onChange={e => setLocalData({...localData, hero: {...localData.hero, title2: e.target.value}})} className="w-full p-3 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:border-[#00664f]" />
                 </div>
               </div>
               <div>
                 <label className="block text-sm font-semibold text-slate-600 mb-1">Sub-judul / Deskripsi</label>
-                <textarea rows="2" value={localData.hero.subtitle} onChange={e => setLocalData({...localData, hero: {...localData.hero, subtitle: e.target.value}})} className="w-full p-3 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:border-[#00664f] resize-none" />
+                <textarea rows="2" value={localData?.hero?.subtitle || ''} onChange={e => setLocalData({...localData, hero: {...localData.hero, subtitle: e.target.value}})} className="w-full p-3 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:border-[#00664f] resize-none" />
               </div>
             </div>
           </div>
 
           <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-200">
-            <h3 className="text-lg font-bold text-slate-800 mb-4 border-b pb-2 flex items-center gap-2"><Edit3 className="w-5 h-5"/> Profil & Sambutan</h3>
+            <h3 className="text-lg font-bold text-slate-800 mb-4 border-b pb-2 flex items-center gap-2">
+              <Edit3 className="w-5 h-5 text-[#00664f]"/> Profil & Sambutan
+            </h3>
             <div className="space-y-6">
               <div>
                 <label className="block text-sm font-semibold text-slate-600 mb-1">Nama Kepala Sekolah</label>
-                <input type="text" value={localData.profil.namaKepsek} onChange={e => setLocalData({...localData, profil: {...localData.profil, namaKepsek: e.target.value}})} className="w-full p-3 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:border-[#00664f]" />
+                <input type="text" value={localData?.profil?.namaKepsek || ''} onChange={e => setLocalData({...localData, profil: {...localData.profil, namaKepsek: e.target.value}})} className="w-full p-3 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:border-[#00664f]" />
               </div>
               <div className="pb-4 border-b border-slate-50">
-                <label className="block text-sm font-semibold text-slate-600 mb-2">Foto Kepala Sekolah</label>
+                <label className="block text-sm font-semibold text-slate-600 mb-2">Link Foto Kepala Sekolah</label>
                 <div className="flex items-center gap-4">
-                  {localData.profil.fotoKepsek && <img src={localData.profil.fotoKepsek} alt="Kepsek" className="w-16 h-16 object-cover rounded-lg border border-slate-200 shadow-sm shrink-0" />}
-                  <input type="file" accept="image/*" onChange={(e) => processImageUpload(e, (base64) => setLocalData({...localData, profil: {...localData.profil, fotoKepsek: base64}}))} className="w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-bold file:bg-[#00664f]/10 file:text-[#00664f] hover:file:bg-[#00664f]/20 cursor-pointer" />
+                  {localData?.profil?.fotoKepsek && <img src={localData?.profil?.fotoKepsek} alt="Kepsek" className="w-16 h-16 object-cover rounded-lg border border-slate-200 shadow-sm shrink-0" />}
+                  <input 
+                    type="text" 
+                    value={localData?.profil?.fotoKepsek || ''} 
+                    onChange={e => setLocalData({...localData, profil: {...localData.profil, fotoKepsek: e.target.value}})} 
+                    placeholder="Masukkan URL Foto Kepala Sekolah (https://...)" 
+                    className="w-full p-3 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:border-[#00664f] text-sm" 
+                  />
                 </div>
               </div>
               <div className="pb-4 border-b border-slate-50">
                 <label className="block text-sm font-semibold text-slate-600 mb-2">Video Profil Sekolah</label>
-                <div className="flex items-center gap-4">
-                  {localData.profil.videoProfil ? (
-                    <div className="w-16 h-16 bg-slate-900 rounded-lg overflow-hidden shrink-0 relative flex items-center justify-center border border-slate-200">
-                       <PlayCircle className="w-8 h-8 text-[#e1ce8c]" />
-                    </div>
-                  ) : (
-                    <div className="w-16 h-16 bg-slate-100 border-2 border-dashed border-slate-300 rounded-lg flex items-center justify-center shrink-0">
-                      <span className="text-xs text-slate-400 text-center px-1">Belum ada</span>
-                    </div>
-                  )}
-                  <div className="flex-1">
-                    <input type="file" accept="video/*" onChange={(e) => processVideoUpload(e, (url) => setLocalData({...localData, profil: {...localData.profil, videoProfil: url}}))} className="w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-bold file:bg-[#00664f]/10 file:text-[#00664f] hover:file:bg-[#00664f]/20 cursor-pointer" />
-                    <p className="text-xs text-slate-500 mt-2">Format: MP4, WebM (Maks. 100MB).</p>
-                  </div>
-                </div>
+                <input 
+                  type="text" 
+                  value={localData?.profil?.videoProfil || ''} 
+                  onChange={e => setLocalData({...localData, profil: {...localData.profil, videoProfil: e.target.value}})} 
+                  className="w-full p-3 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:border-[#00664f] text-sm" 
+                  placeholder="Masukkan URL Video (MP4 / Direct Link / YouTube Embed)"
+                />
               </div>
               <div>
                 <label className="block text-sm font-semibold text-slate-600 mb-1">Teks Sambutan</label>
-                <textarea rows="4" value={localData.profil.sambutan} onChange={e => setLocalData({...localData, profil: {...localData.profil, sambutan: e.target.value}})} className="w-full p-3 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:border-[#00664f] resize-none" />
+                <textarea rows="4" value={localData?.profil?.sambutan || ''} onChange={e => setLocalData({...localData, profil: {...localData.profil, sambutan: e.target.value}})} className="w-full p-3 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:border-[#00664f] resize-none" />
               </div>
             </div>
           </div>
 
           <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-200">
-            <h3 className="text-lg font-bold text-slate-800 mb-4 border-b pb-2 flex items-center gap-2"><Edit3 className="w-5 h-5"/> Data Fasilitas (Upload Gambar)</h3>
+            <div className="flex justify-between items-center mb-4 border-b pb-2">
+              <h3 className="text-lg font-bold text-slate-800 flex items-center gap-2">
+                <Edit3 className="w-5 h-5 text-[#00664f]"/> Data Fasilitas
+              </h3>
+              <button onClick={() => addItem('fasilitas', { title: '', desc: '', image: '', colSpan: 'md:col-span-1', rowSpan: 'md:row-span-1' })} className="flex items-center gap-1 text-sm bg-[#00664f] text-white px-4 py-2 rounded-lg hover:bg-[#004d3b] transition-colors font-semibold shadow-sm cursor-pointer">
+                <Plus className="w-4 h-4" /> Tambah Fasilitas
+              </button>
+            </div>
             <div className="space-y-4">
-              {localData.fasilitas.map((item, index) => (
+              {localData?.fasilitas?.map((item, index) => (
                 <div key={index} className="bg-slate-50 p-5 rounded-xl border border-slate-200 grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="md:col-span-2">
-                    <h4 className="font-bold text-slate-700 text-sm uppercase tracking-wider mb-2">Fasilitas #{index + 1}</h4>
+                  <div className="md:col-span-2 flex justify-between items-center">
+                    <h4 className="font-bold text-slate-700 text-sm uppercase tracking-wider">Fasilitas #{index + 1}</h4>
+                    <button onClick={() => removeItem('fasilitas', index)} className="text-xs text-red-600 hover:text-red-800 font-bold bg-red-100 hover:bg-red-200 px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1 cursor-pointer">
+                      <Trash2 className="w-3 h-3" /> Hapus
+                    </button>
                   </div>
                   <div>
                     <label className="block text-xs font-semibold text-slate-600 mb-1">Nama Fasilitas</label>
-                    <input type="text" value={item.title} onChange={e => updateArrayItem('fasilitas', index, 'title', e.target.value)} className="w-full p-2.5 bg-white border border-slate-200 rounded-lg outline-none text-sm" />
+                    <input type="text" value={item.title || ''} onChange={e => updateArrayItem('fasilitas', index, 'title', e.target.value)} className="w-full p-2.5 bg-white border border-slate-200 rounded-lg outline-none text-sm" />
                   </div>
                   <div>
                     <label className="block text-xs font-semibold text-slate-600 mb-1">Deskripsi Singkat</label>
-                    <input type="text" value={item.desc} onChange={e => updateArrayItem('fasilitas', index, 'desc', e.target.value)} className="w-full p-2.5 bg-white border border-slate-200 rounded-lg outline-none text-sm" />
+                    <input type="text" value={item.desc || ''} onChange={e => updateArrayItem('fasilitas', index, 'desc', e.target.value)} className="w-full p-2.5 bg-white border border-slate-200 rounded-lg outline-none text-sm" />
                   </div>
                   <div className="md:col-span-2 mt-2">
-                    <label className="block text-xs font-semibold text-slate-600 mb-2">Gambar Fasilitas</label>
+                    <label className="block text-xs font-semibold text-slate-600 mb-2">Link Gambar Fasilitas</label>
                     <div className="flex items-center gap-4">
                       {item.image && <img src={item.image} alt={item.title} className="w-16 h-16 object-cover rounded-lg border border-slate-200 shadow-sm shrink-0" />}
-                      <input type="file" accept="image/*" onChange={e => processImageUpload(e, base64 => updateArrayItem('fasilitas', index, 'image', base64))} className="w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-bold file:bg-[#00664f]/10 file:text-[#00664f] hover:file:bg-[#00664f]/20 cursor-pointer" />
+                      <input 
+                        type="text" 
+                        value={item.image || ''} 
+                        onChange={e => updateArrayItem('fasilitas', index, 'image', e.target.value)} 
+                        placeholder="Masukkan URL Gambar (https://...)" 
+                        className="w-full p-2.5 bg-white border border-slate-200 rounded-lg outline-none text-sm" 
+                      />
                     </div>
                   </div>
                 </div>
@@ -698,24 +677,34 @@ const AdminDashboard = ({ siteData, setSiteData, showToast, onLogout }) => {
           </div>
 
           <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-200">
-            <h3 className="text-lg font-bold text-slate-800 mb-4 border-b pb-2 flex items-center gap-2"><Edit3 className="w-5 h-5"/> Data Ekstrakurikuler</h3>
+            <div className="flex justify-between items-center mb-4 border-b pb-2">
+              <h3 className="text-lg font-bold text-slate-800 flex items-center gap-2">
+                <Edit3 className="w-5 h-5 text-[#00664f]"/> Data Ekstrakurikuler
+              </h3>
+              <button onClick={() => addItem('ekskul', { name: '', iconName: 'Star', category: 'Pilihan' })} className="flex items-center gap-1 text-sm bg-[#00664f] text-white px-4 py-2 rounded-lg hover:bg-[#004d3b] transition-colors font-semibold shadow-sm cursor-pointer">
+                <Plus className="w-4 h-4" /> Tambah Ekskul
+              </button>
+            </div>
             <div className="space-y-4">
-              {localData.ekskul.map((item, index) => (
+              {localData?.ekskul?.map((item, index) => (
                 <div key={index} className="bg-slate-50 p-5 rounded-xl border border-slate-200 grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div className="md:col-span-3">
-                    <h4 className="font-bold text-slate-700 text-sm uppercase tracking-wider mb-2">Ekskul #{index + 1}</h4>
+                  <div className="md:col-span-3 flex justify-between items-center">
+                    <h4 className="font-bold text-slate-700 text-sm uppercase tracking-wider">Ekskul #{index + 1}</h4>
+                    <button onClick={() => removeItem('ekskul', index)} className="text-xs text-red-600 hover:text-red-800 font-bold bg-red-100 hover:bg-red-200 px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1 cursor-pointer">
+                      <Trash2 className="w-3 h-3" /> Hapus
+                    </button>
                   </div>
                   <div>
                     <label className="block text-xs font-semibold text-slate-600 mb-1">Nama Ekskul</label>
-                    <input type="text" value={item.name} onChange={e => updateArrayItem('ekskul', index, 'name', e.target.value)} className="w-full p-2.5 bg-white border border-slate-200 rounded-lg outline-none text-sm" />
+                    <input type="text" value={item.name || ''} onChange={e => updateArrayItem('ekskul', index, 'name', e.target.value)} className="w-full p-2.5 bg-white border border-slate-200 rounded-lg outline-none text-sm" />
                   </div>
                   <div>
                     <label className="block text-xs font-semibold text-slate-600 mb-1">Kategori</label>
-                    <input type="text" value={item.category} onChange={e => updateArrayItem('ekskul', index, 'category', e.target.value)} className="w-full p-2.5 bg-white border border-slate-200 rounded-lg outline-none text-sm" />
+                    <input type="text" value={item.category || ''} onChange={e => updateArrayItem('ekskul', index, 'category', e.target.value)} className="w-full p-2.5 bg-white border border-slate-200 rounded-lg outline-none text-sm" />
                   </div>
                   <div>
-                    <label className="block text-xs font-semibold text-slate-600 mb-1">Ikon (Pilihan)</label>
-                    <select value={item.iconName} onChange={e => updateArrayItem('ekskul', index, 'iconName', e.target.value)} className="w-full p-2.5 bg-white border border-slate-200 rounded-lg outline-none text-sm appearance-none">
+                    <label className="block text-xs font-semibold text-slate-600 mb-1">Ikon</label>
+                    <select value={item.iconName || 'Star'} onChange={e => updateArrayItem('ekskul', index, 'iconName', e.target.value)} className="w-full p-2.5 bg-white border border-slate-200 rounded-lg outline-none text-sm">
                       <option value="Target">Target (Panah)</option>
                       <option value="Star">Star (Bintang)</option>
                       <option value="BookOpen">Book (Buku)</option>
@@ -731,33 +720,41 @@ const AdminDashboard = ({ siteData, setSiteData, showToast, onLogout }) => {
 
           <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-200">
             <div className="flex justify-between items-center mb-4 border-b pb-2">
-              <h3 className="text-lg font-bold text-slate-800 flex items-center gap-2"><Edit3 className="w-5 h-5"/> Data Tenaga Pendidik (Guru)</h3>
-              <button onClick={addNewTeacher} className="flex items-center gap-1 text-sm bg-[#00664f] text-white px-4 py-2 rounded-lg hover:bg-[#004d3b] transition-colors font-semibold shadow-sm">
+              <h3 className="text-lg font-bold text-slate-800 flex items-center gap-2">
+                <Edit3 className="w-5 h-5 text-[#00664f]"/> Data Tenaga Pendidik (Guru)
+              </h3>
+              <button onClick={() => addItem('guru', { id: Date.now(), name: '', role: '', image: '' })} className="flex items-center gap-1 text-sm bg-[#00664f] text-white px-4 py-2 rounded-lg hover:bg-[#004d3b] transition-colors font-semibold shadow-sm cursor-pointer">
                 <Plus className="w-4 h-4" /> Tambah Guru Baru
               </button>
             </div>
             <div className="space-y-4">
-              {localData.guru.map((item, index) => (
+              {localData?.guru?.map((item, index) => (
                 <div key={item.id || index} className="bg-slate-50 p-5 rounded-xl border border-slate-200 grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="md:col-span-2 flex justify-between items-center mb-2">
                     <h4 className="font-bold text-slate-700 text-sm uppercase tracking-wider">Guru #{index + 1}</h4>
-                    <button onClick={() => removeTeacher(index)} className="text-xs text-red-600 hover:text-red-800 font-bold bg-red-100 hover:bg-red-200 px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1">
+                    <button onClick={() => removeItem('guru', index)} className="text-xs text-red-600 hover:text-red-800 font-bold bg-red-100 hover:bg-red-200 px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1 cursor-pointer">
                       <Trash2 className="w-3 h-3" /> Hapus Guru
                     </button>
                   </div>
                   <div>
                     <label className="block text-xs font-semibold text-slate-600 mb-1">Nama Guru</label>
-                    <input type="text" value={item.name} onChange={e => updateArrayItem('guru', index, 'name', e.target.value)} className="w-full p-2.5 bg-white border border-slate-200 rounded-lg outline-none text-sm" />
+                    <input type="text" value={item.name || ''} onChange={e => updateArrayItem('guru', index, 'name', e.target.value)} className="w-full p-2.5 bg-white border border-slate-200 rounded-lg outline-none text-sm" />
                   </div>
                   <div>
-                    <label className="block text-xs font-semibold text-slate-600 mb-1">Mata Pelajaran</label>
-                    <input type="text" value={item.role} onChange={e => updateArrayItem('guru', index, 'role', e.target.value)} className="w-full p-2.5 bg-white border border-slate-200 rounded-lg outline-none text-sm" />
+                    <label className="block text-xs font-semibold text-slate-600 mb-1">Mata Pelajaran / Jabatan</label>
+                    <input type="text" value={item.role || ''} onChange={e => updateArrayItem('guru', index, 'role', e.target.value)} className="w-full p-2.5 bg-white border border-slate-200 rounded-lg outline-none text-sm" />
                   </div>
                   <div className="md:col-span-2 mt-2">
-                    <label className="block text-xs font-semibold text-slate-600 mb-2">Foto Guru</label>
+                    <label className="block text-xs font-semibold text-slate-600 mb-2">Link Foto Guru</label>
                     <div className="flex items-center gap-4">
                       {item.image && <img src={item.image} alt={item.name} className="w-16 h-16 object-cover rounded-lg border border-slate-200 shadow-sm shrink-0" />}
-                      <input type="file" accept="image/*" onChange={e => processImageUpload(e, base64 => updateArrayItem('guru', index, 'image', base64))} className="w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-bold file:bg-[#00664f]/10 file:text-[#00664f] hover:file:bg-[#00664f]/20 cursor-pointer" />
+                      <input 
+                        type="text" 
+                        value={item.image || ''} 
+                        onChange={e => updateArrayItem('guru', index, 'image', e.target.value)} 
+                        placeholder="Masukkan URL Foto Gambar (https://...)" 
+                        className="w-full p-2.5 bg-white border border-slate-200 rounded-lg outline-none text-sm" 
+                      />
                     </div>
                   </div>
                 </div>
@@ -766,34 +763,50 @@ const AdminDashboard = ({ siteData, setSiteData, showToast, onLogout }) => {
           </div>
 
           <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-200">
-            <h3 className="text-lg font-bold text-slate-800 mb-4 border-b pb-2 flex items-center gap-2"><Edit3 className="w-5 h-5"/> Data Berita (Upload Gambar)</h3>
+            <div className="flex justify-between items-center mb-4 border-b pb-2">
+              <h3 className="text-lg font-bold text-slate-800 flex items-center gap-2">
+                <Edit3 className="w-5 h-5 text-[#00664f]"/> Data Berita & Pengumuman
+              </h3>
+              <button onClick={() => addItem('berita', { id: Date.now(), title: '', date: new Date().toLocaleDateString('id-ID'), category: 'Pengumuman', content: '', image: '' })} className="flex items-center gap-1 text-sm bg-[#00664f] text-white px-4 py-2 rounded-lg hover:bg-[#004d3b] transition-colors font-semibold shadow-sm cursor-pointer">
+                <Plus className="w-4 h-4" /> Tulis Berita Baru
+              </button>
+            </div>
             <div className="space-y-4">
-              {localData.berita.map((news, index) => (
-                <div key={news.id} className="bg-slate-50 p-5 rounded-xl border border-slate-200 grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="md:col-span-2">
-                    <h4 className="font-bold text-slate-700 text-sm uppercase tracking-wider mb-2">Berita #{index + 1}</h4>
+              {localData?.berita?.map((news, index) => (
+                <div key={news.id || index} className="bg-slate-50 p-5 rounded-xl border border-slate-200 grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="md:col-span-2 flex justify-between items-center">
+                    <h4 className="font-bold text-slate-700 text-sm uppercase tracking-wider">Berita #{index + 1}</h4>
+                    <button onClick={() => removeItem('berita', index)} className="text-xs text-red-600 hover:text-red-800 font-bold bg-red-100 hover:bg-red-200 px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1 cursor-pointer">
+                      <Trash2 className="w-3 h-3" /> Hapus Berita
+                    </button>
                   </div>
                   <div className="md:col-span-2">
                     <label className="block text-xs font-semibold text-slate-600 mb-1">Judul Berita</label>
-                    <input type="text" value={news.title} onChange={e => updateArrayItem('berita', index, 'title', e.target.value)} className="w-full p-2.5 bg-white border border-slate-200 rounded-lg outline-none text-sm" />
+                    <input type="text" value={news.title || ''} onChange={e => updateArrayItem('berita', index, 'title', e.target.value)} className="w-full p-2.5 bg-white border border-slate-200 rounded-lg outline-none text-sm" />
                   </div>
                   <div>
-                    <label className="block text-xs font-semibold text-slate-600 mb-1">Tanggal</label>
-                    <input type="text" value={news.date} onChange={e => updateArrayItem('berita', index, 'date', e.target.value)} className="w-full p-2.5 bg-white border border-slate-200 rounded-lg outline-none text-sm" />
+                    <label className="block text-xs font-semibold text-slate-600 mb-1">Tanggal Publikasi</label>
+                    <input type="text" value={news.date || ''} onChange={e => updateArrayItem('berita', index, 'date', e.target.value)} className="w-full p-2.5 bg-white border border-slate-200 rounded-lg outline-none text-sm" />
                   </div>
                   <div>
                     <label className="block text-xs font-semibold text-slate-600 mb-1">Kategori</label>
-                    <input type="text" value={news.category} onChange={e => updateArrayItem('berita', index, 'category', e.target.value)} className="w-full p-2.5 bg-white border border-slate-200 rounded-lg outline-none text-sm" />
+                    <input type="text" value={news.category || ''} onChange={e => updateArrayItem('berita', index, 'category', e.target.value)} className="w-full p-2.5 bg-white border border-slate-200 rounded-lg outline-none text-sm" />
                   </div>
                   <div className="md:col-span-2">
                     <label className="block text-xs font-semibold text-slate-600 mb-1">Isi Berita Lengkap</label>
-                    <textarea rows="4" value={news.content} onChange={e => updateArrayItem('berita', index, 'content', e.target.value)} className="w-full p-2.5 bg-white border border-slate-200 rounded-lg outline-none text-sm resize-none"></textarea>
+                    <textarea rows="4" value={news.content || ''} onChange={e => updateArrayItem('berita', index, 'content', e.target.value)} className="w-full p-2.5 bg-white border border-slate-200 rounded-lg outline-none text-sm resize-none"></textarea>
                   </div>
                   <div className="md:col-span-2 mt-2">
-                    <label className="block text-xs font-semibold text-slate-600 mb-2">Thumbnail Berita</label>
+                    <label className="block text-xs font-semibold text-slate-600 mb-2">Link Thumbnail / Gambar Berita</label>
                     <div className="flex items-center gap-4">
                       {news.image && <img src={news.image} alt={news.title} className="w-16 h-16 object-cover rounded-lg border border-slate-200 shadow-sm shrink-0" />}
-                      <input type="file" accept="image/*" onChange={e => processImageUpload(e, base64 => updateArrayItem('berita', index, 'image', base64))} className="w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-bold file:bg-[#00664f]/10 file:text-[#00664f] hover:file:bg-[#00664f]/20 cursor-pointer" />
+                      <input 
+                        type="text" 
+                        value={news.image || ''} 
+                        onChange={e => updateArrayItem('berita', index, 'image', e.target.value)} 
+                        placeholder="Masukkan URL Thumbnail Berita (https://...)" 
+                        className="w-full p-2.5 bg-white border border-slate-200 rounded-lg outline-none text-sm" 
+                      />
                     </div>
                   </div>
                 </div>
@@ -806,7 +819,7 @@ const AdminDashboard = ({ siteData, setSiteData, showToast, onLogout }) => {
               type="button"
               onClick={handleSave} 
               disabled={loading}
-              className="w-full bg-[#00664f] hover:bg-[#004d3b] text-white font-bold py-4 rounded-xl shadow-2xl flex items-center justify-center gap-2 transition-all hover:scale-[1.01]"
+              className="w-full bg-[#00664f] hover:bg-[#004d3b] text-white font-bold py-4 rounded-xl shadow-2xl flex items-center justify-center gap-2 transition-all hover:scale-[1.01] disabled:bg-slate-400 cursor-pointer"
             >
               <Save className="w-5 h-5" /> {loading ? "Menyimpan Perubahan..." : "Terapkan Perubahan ke Website"}
             </button>
@@ -823,7 +836,6 @@ export default function App() {
   const [currentPage, setCurrentPage] = useState('home');
   const [showVideoModal, setShowVideoModal] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
-  
   const [selectedNews, setSelectedNews] = useState(null);
   
   const [siteData, setSiteData] = useState(() => {
@@ -839,11 +851,7 @@ export default function App() {
 
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 20) {
-        setIsScrolled(true);
-      } else {
-        setIsScrolled(false);
-      }
+      setIsScrolled(window.scrollY > 20);
     };
 
     window.addEventListener('scroll', handleScroll);
@@ -866,6 +874,17 @@ export default function App() {
     };
 
     fetchCMSData();
+  }, []);
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        setShowVideoModal(false);
+        setShowAdminLogin(false);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
   const scrollLeft = () => {
@@ -904,6 +923,19 @@ export default function App() {
     }
   };
 
+  const scrollToId = (id) => {
+    if (id === 'beranda') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+    const element = document.getElementById(id);
+    if (element) {
+      const offset = 80;
+      const elementPosition = element.getBoundingClientRect().top + window.scrollY;
+      window.scrollTo({ top: elementPosition - offset, behavior: 'smooth' });
+    }
+  };
+
   const handleMenuClick = (item) => {
     if (item.url) {
       window.open(item.url, '_blank', 'noopener,noreferrer');
@@ -918,19 +950,6 @@ export default function App() {
       scrollToId(item.id);
     }
     setIsMobileMenuOpen(false);
-  };
-
-  const scrollToId = (id) => {
-    if (id === 'beranda') {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      return;
-    }
-    const element = document.getElementById(id);
-    if (element) {
-      const offset = 80;
-      const elementPosition = element.getBoundingClientRect().top + window.scrollY;
-      window.scrollTo({ top: elementPosition - offset, behavior: 'smooth' });
-    }
   };
 
   const handleReadNews = (news) => {
@@ -978,14 +997,14 @@ export default function App() {
           <div className="bg-slate-900 rounded-3xl overflow-hidden max-w-4xl w-full border border-slate-800 relative">
             <button 
               onClick={() => setShowVideoModal(false)}
-              className="absolute top-4 right-4 z-10 w-10 h-10 bg-black/50 text-white rounded-full flex items-center justify-center hover:bg-black transition-colors"
+              className="absolute top-4 right-4 z-10 w-10 h-10 bg-black/50 text-white rounded-full flex items-center justify-center hover:bg-black transition-colors cursor-pointer"
             >
               <X className="w-6 h-6" />
             </button>
             <div className="p-8 text-center">
               <h3 className="text-2xl font-bold text-white mb-4">Video Profil Sekolah</h3>
-              {siteData.profil.videoProfil ? (
-                <video src={siteData.profil.videoProfil} controls className="w-full max-h-[70vh] rounded-2xl"></video>
+              {siteData?.profil?.videoProfil ? (
+                <video src={siteData?.profil?.videoProfil} controls className="w-full max-h-[70vh] rounded-2xl"></video>
               ) : (
                 <p className="text-slate-400 py-12">Video profil belum diunggah oleh administrator.</p>
               )}
@@ -999,7 +1018,7 @@ export default function App() {
           <div className="bg-white rounded-3xl p-8 max-w-md w-full shadow-2xl relative">
             <button 
               onClick={() => setShowAdminLogin(false)}
-              className="absolute top-4 right-4 text-slate-400 hover:text-slate-600"
+              className="absolute top-4 right-4 text-slate-400 hover:text-slate-600 cursor-pointer"
             >
               <X className="w-6 h-6" />
             </button>
@@ -1025,7 +1044,7 @@ export default function App() {
               </div>
               <button 
                 type="submit" 
-                className="w-full bg-[#00664f] hover:bg-[#004d3b] text-white font-bold py-3.5 rounded-xl transition-all"
+                className="w-full bg-[#00664f] hover:bg-[#004d3b] text-white font-bold py-3.5 rounded-xl transition-all cursor-pointer"
               >
                 Masuk Dashboard
               </button>
@@ -1042,8 +1061,8 @@ export default function App() {
           <div onClick={() => navigateTo('home')} className="flex items-center gap-3.5 cursor-pointer group z-50">
             <div className="relative">
               <div className={`w-12 h-12 bg-white rounded-full flex items-center justify-center relative overflow-hidden transition-all duration-300 shadow-md ${!isScrolled && currentPage === 'home' ? 'border border-white/20' : 'border border-slate-200'}`}>
-                {siteData.sekolah.logo ? (
-                  <img src={siteData.sekolah.logo} alt="Logo" className="w-10 h-10 object-contain z-10" />
+                {siteData?.sekolah?.logo ? (
+                  <img src={siteData?.sekolah?.logo} alt="Logo" className="w-10 h-10 object-contain z-10" />
                 ) : (
                   <Shield className="w-6 h-6 text-[#00664f] z-10" />
                 )}
@@ -1051,10 +1070,10 @@ export default function App() {
             </div>
             <div>
               <h1 className={`font-black text-xl tracking-tight leading-none transition-colors duration-300 ${isScrolled || currentPage !== 'home' ? 'text-[#00664f]' : 'text-white'}`}>
-                {siteData.sekolah.nama}
+                {siteData?.sekolah?.nama}
               </h1>
               <p className={`text-[0.65rem] font-bold tracking-[0.1em] transition-colors duration-300 uppercase mt-1 ${isScrolled || currentPage !== 'home' ? 'text-slate-500' : 'text-slate-300'}`}>
-                NPSN: {siteData.sekolah.npsn} &bull; {siteData.sekolah.lokasi}
+                NPSN: {siteData?.sekolah?.npsn} &bull; {siteData?.sekolah?.lokasi}
               </p>
             </div>
           </div>
@@ -1064,7 +1083,7 @@ export default function App() {
               <button 
                 key={item.id}
                 onClick={() => handleMenuClick(item)} 
-                className={`text-sm font-semibold px-4 py-2 rounded-full transition-all duration-300 hover:text-[#e1ce8c] ${
+                className={`text-sm font-semibold px-4 py-2 rounded-full transition-all duration-300 hover:text-[#e1ce8c] cursor-pointer ${
                   isScrolled || currentPage !== 'home' 
                     ? 'text-slate-600 hover:bg-slate-100' 
                     : 'text-white/90 hover:bg-white/10'
@@ -1077,14 +1096,14 @@ export default function App() {
             {isAdminLoggedIn && currentPage !== 'admin' ? (
               <button 
                 onClick={() => navigateTo('admin')}
-                className="ml-2 px-6 py-2.5 rounded-full text-sm font-bold transition-all duration-300 bg-slate-800 text-white hover:bg-slate-700 flex items-center gap-2"
+                className="ml-2 px-6 py-2.5 rounded-full text-sm font-bold transition-all duration-300 bg-slate-800 text-white hover:bg-slate-700 flex items-center gap-2 cursor-pointer"
               >
                 <Settings className="w-4 h-4"/> Dashboard
               </button>
             ) : (
               <button 
                 onClick={() => navigateTo('ppdb')}
-                className="ml-2 px-6 py-2.5 rounded-full text-sm font-bold transition-all duration-300 bg-[#e1ce8c] text-[#004d3b] hover:bg-white hover:scale-105 shadow-[0_0_20px_rgba(225,206,140,0.3)] hover:shadow-[0_0_25px_rgba(225,206,140,0.5)]"
+                className="ml-2 px-6 py-2.5 rounded-full text-sm font-bold transition-all duration-300 bg-[#e1ce8c] text-[#004d3b] hover:bg-white hover:scale-105 shadow-[0_0_20px_rgba(225,206,140,0.3)] hover:shadow-[0_0_25px_rgba(225,206,140,0.5)] cursor-pointer"
               >
                 Daftar PPDB
               </button>
@@ -1092,7 +1111,7 @@ export default function App() {
           </div>
 
           <button 
-            className={`md:hidden p-2 rounded-lg transition-colors z-50 ${isScrolled || currentPage !== 'home' ? 'text-[#00664f] hover:bg-slate-100' : 'text-white hover:bg-white/10'}`}
+            className={`md:hidden p-2 rounded-lg transition-colors z-50 cursor-pointer ${isScrolled || currentPage !== 'home' ? 'text-[#00664f] hover:bg-slate-100' : 'text-white hover:bg-white/10'}`}
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           >
             {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -1102,10 +1121,10 @@ export default function App() {
         <div className={`md:hidden fixed inset-0 z-40 bg-white transition-all duration-500 origin-top ${isMobileMenuOpen ? 'opacity-100 visible' : 'opacity-0 invisible'}`}>
           <div className="pt-32 px-6 flex flex-col gap-6">
             {MENU_ITEMS.map((item) => (
-              <button key={item.id} onClick={() => handleMenuClick(item)} className="text-left font-black text-slate-800 text-3xl hover:text-[#00664f] transition-colors">{item.label}</button>
+              <button key={item.id} onClick={() => handleMenuClick(item)} className="text-left font-black text-slate-800 text-3xl hover:text-[#00664f] transition-colors cursor-pointer">{item.label}</button>
             ))}
             <div className="pt-8 border-t border-slate-100 mt-4">
-              <button onClick={() => navigateTo('ppdb')} className="bg-gradient-to-r from-[#00664f] to-[#004d3b] text-white text-center px-6 py-4 rounded-2xl font-bold text-xl w-full shadow-xl shadow-[#00664f]/20 flex items-center justify-center gap-3">
+              <button onClick={() => navigateTo('ppdb')} className="bg-gradient-to-r from-[#00664f] to-[#004d3b] text-white text-center px-6 py-4 rounded-2xl font-bold text-xl w-full shadow-xl shadow-[#00664f]/20 flex items-center justify-center gap-3 cursor-pointer">
                 Daftar PPDB <ArrowRight />
               </button>
             </div>
@@ -1137,21 +1156,21 @@ export default function App() {
                 <div className="text-left pt-10 md:pt-0">
                   <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 border border-white/20 backdrop-blur-md mb-8">
                      <span className="w-2.5 h-2.5 rounded-full bg-[#e1ce8c] animate-pulse"></span>
-                     <span className="text-[#e1ce8c] text-xs font-bold tracking-widest uppercase">{siteData.hero.tagline}</span>
+                     <span className="text-[#e1ce8c] text-xs font-bold tracking-widest uppercase">{siteData?.hero?.tagline}</span>
                   </div>
                   <h1 className="text-5xl md:text-6xl lg:text-7xl font-black text-white tracking-tight mb-6 leading-[1.1]">
-                    {siteData.hero.title1} <br/>
-                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#e1ce8c] to-white">{siteData.hero.title2}</span>
+                    {siteData?.hero?.title1} <br/>
+                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#e1ce8c] to-white">{siteData?.hero?.title2}</span>
                   </h1>
                   <p className="text-lg md:text-xl text-slate-300 max-w-xl mb-10 leading-relaxed font-light">
-                    {siteData.hero.subtitle}
+                    {siteData?.hero?.subtitle}
                   </p>
                   
                   <div className="flex flex-col sm:flex-row gap-4">
-                    <button onClick={() => navigateTo('ppdb')} className="bg-[#e1ce8c] text-[#004d3b] hover:bg-white px-8 py-4 rounded-full font-bold transition-all duration-300 shadow-[0_0_30px_rgba(225,206,140,0.3)] hover:shadow-[0_0_40px_rgba(225,206,140,0.5)] hover:-translate-y-1 flex items-center justify-center gap-2 group">
+                    <button onClick={() => navigateTo('ppdb')} className="bg-[#e1ce8c] text-[#004d3b] hover:bg-white px-8 py-4 rounded-full font-bold transition-all duration-300 shadow-[0_0_30px_rgba(225,206,140,0.3)] hover:shadow-[0_0_40px_rgba(225,206,140,0.5)] hover:-translate-y-1 flex items-center justify-center gap-2 group cursor-pointer">
                       Daftar Sekarang <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                     </button>
-                    <button onClick={() => setShowVideoModal(true)} className="bg-white/10 hover:bg-white/20 text-white backdrop-blur-md border border-white/20 px-8 py-4 rounded-full font-semibold transition-all duration-300 flex items-center justify-center gap-2">
+                    <button onClick={() => setShowVideoModal(true)} className="bg-white/10 hover:bg-white/20 text-white backdrop-blur-md border border-white/20 px-8 py-4 rounded-full font-semibold transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer">
                       <PlayCircle className="w-5 h-5" /> Video Profil
                     </button>
                   </div>
@@ -1159,15 +1178,15 @@ export default function App() {
 
                 <div className="hidden md:block relative h-[600px] w-full">
                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-[28rem] rounded-[2rem] overflow-hidden border-8 border-white/10 shadow-2xl animate-float z-20 bg-[#004d3b]">
-                     <img 
-                       src="foto-siswa.jpeg" 
-                       alt="Students" 
-                       className="w-full h-full object-cover" 
-                       onError={(e) => {
-                         e.target.onerror = null;
-                         e.target.src = "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=800";
-                       }}
-                     />
+                     <img
+                        src="/foto-siswa.jpeg"
+                        alt="Siswa SMP Al-Fathonah"
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          e.target.onerror = null;
+                          e.target.src = "https://images.unsplash.com/photo-1577896851231-70ef18881754?q=80&w=800";
+                        }}
+                      />
                      <div className="absolute inset-0 bg-gradient-to-t from-[#00664f]/80 to-transparent"></div>
                    </div>
                    
@@ -1177,7 +1196,7 @@ export default function App() {
                      </div>
                      <div>
                        <p className="text-xs text-slate-500 font-bold uppercase">Akreditasi</p>
-                       <p className="text-xl font-black text-slate-900">{siteData.sekolah.akreditasi}</p>
+                       <p className="text-xl font-black text-slate-900">{siteData?.sekolah?.akreditasi}</p>
                      </div>
                    </div>
 
@@ -1187,7 +1206,7 @@ export default function App() {
                      </div>
                      <div>
                        <p className="text-xs text-slate-500 font-bold uppercase">Total Siswa</p>
-                       <p className="text-xl font-black text-slate-900">{siteData.sekolah.totalSiswa}</p>
+                       <p className="text-xl font-black text-slate-900">{siteData?.sekolah?.totalSiswa}</p>
                      </div>
                    </div>
                 </div>
@@ -1206,7 +1225,7 @@ export default function App() {
                   <div className="lg:w-2/5 relative">
                     <div className="absolute -inset-4 bg-[#00664f] rounded-[3rem] transform -rotate-6 opacity-10"></div>
                     <img 
-                      src={siteData.profil.fotoKepsek || "https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=800"} 
+                      src={siteData?.profil?.fotoKepsek || "https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=800"} 
                       alt="Kepala Sekolah" 
                       className="w-full h-[500px] object-cover rounded-[2.5rem] relative z-10 shadow-2xl grayscale-[20%]"
                       loading="lazy"
@@ -1228,11 +1247,11 @@ export default function App() {
                       Komitmen Membangun <span className="text-[#00664f]">Generasi Emas</span>
                     </h3>
                     <p className="text-lg text-slate-600 leading-relaxed mb-8 italic">
-                      "{siteData.profil.sambutan}"
+                      "{siteData?.profil?.sambutan}"
                     </p>
                     <div className="flex items-center gap-6">
                       <div>
-                        <h4 className="font-bold text-2xl text-slate-900">{siteData.profil.namaKepsek}</h4>
+                        <h4 className="font-bold text-2xl text-slate-900">{siteData?.profil?.namaKepsek}</h4>
                         <p className="text-[#00664f] font-semibold mt-1">Kepala Sekolah</p>
                       </div>
                     </div>
@@ -1245,7 +1264,7 @@ export default function App() {
               <div className="max-w-7xl mx-auto px-4 sm:px-6">
                 <div className="text-center mb-16 mx-auto">
                   <h2 className="text-sm font-bold text-[#e1ce8c] tracking-widest uppercase mb-3">Mengapa Memilih Kami?</h2>
-                  <h3 className="text-3xl md:text-4xl font-black text-slate-900">Keunggulan {siteData.sekolah.nama}</h3>
+                  <h3 className="text-3xl md:text-4xl font-black text-slate-900">Keunggulan {siteData?.sekolah?.nama}</h3>
                 </div>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -1270,10 +1289,10 @@ export default function App() {
                     <h3 className="text-3xl md:text-4xl font-black text-slate-900">Profil Guru Kami</h3>
                   </div>
                   <div className="flex items-center gap-3">
-                    <button onClick={scrollLeft} className="w-12 h-12 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-600 hover:text-[#00664f] hover:border-[#00664f] transition-all hover:-translate-x-1 shadow-sm">
+                    <button onClick={scrollLeft} className="w-12 h-12 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-600 hover:text-[#00664f] hover:border-[#00664f] transition-all hover:-translate-x-1 shadow-sm cursor-pointer">
                       <ChevronLeft className="w-6 h-6" />
                     </button>
-                    <button onClick={scrollRight} className="w-12 h-12 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-600 hover:text-[#00664f] hover:border-[#00664f] transition-all hover:translate-x-1 shadow-sm">
+                    <button onClick={scrollRight} className="w-12 h-12 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-600 hover:text-[#00664f] hover:border-[#00664f] transition-all hover:translate-x-1 shadow-sm cursor-pointer">
                       <ChevronRight className="w-6 h-6" />
                     </button>
                   </div>
@@ -1283,7 +1302,7 @@ export default function App() {
                   ref={sliderRef}
                   className="flex gap-6 overflow-x-auto pb-8 pt-4 snap-x snap-mandatory hide-scrollbar -mx-4 px-4 sm:mx-0 sm:px-0"
                 >
-                  {siteData.guru.map((guru) => (
+                  {siteData?.guru?.map((guru) => (
                     <div key={guru.id} className="min-w-[280px] md:min-w-[320px] bg-white rounded-[2rem] p-6 shadow-[0_4px_20px_rgba(0,0,0,0.03)] border border-slate-100 snap-center hover:-translate-y-2 transition-transform duration-300 group">
                       <div className="w-32 h-32 mx-auto rounded-full overflow-hidden mb-6 border-4 border-slate-50 shadow-inner group-hover:border-[#00664f]/20 transition-colors">
                         <img 
@@ -1317,7 +1336,7 @@ export default function App() {
                   </div>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-4 md:grid-rows-2 gap-4 h-[800px] md:h-[600px]">
-                  {siteData.fasilitas.map((item, idx) => (
+                  {siteData?.fasilitas?.map((item, idx) => (
                     <div key={idx} className={`relative rounded-3xl overflow-hidden group ${item.colSpan} ${item.rowSpan}`}>
                       <img src={item.image} alt={item.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" loading="lazy" />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent"></div>
@@ -1338,7 +1357,7 @@ export default function App() {
                   <p className="text-slate-500">Wadah penyaluran bakat dan minat siswa di luar jam pelajaran akademik.</p>
                 </div>
                 <div className="flex flex-wrap justify-center gap-4">
-                  {siteData.ekskul.map((item, idx) => (
+                  {siteData?.ekskul?.map((item, idx) => (
                     <div key={idx} className="flex items-center gap-3 px-6 py-4 bg-slate-50 border border-slate-100 rounded-full hover:border-[#00664f]/30 hover:bg-[#00664f]/5 hover:shadow-md transition-all cursor-pointer">
                       <div className="text-[#00664f]">
                         {item.iconName === 'Target' && <Target />}
@@ -1366,13 +1385,13 @@ export default function App() {
                     <h2 className="text-sm font-bold text-[#e1ce8c] tracking-widest uppercase mb-3">Informasi Terkini</h2>
                     <h3 className="text-3xl md:text-4xl font-black text-slate-900">Kabar Seputar Sekolah</h3>
                   </div>
-                  <button onClick={() => showToast('Halaman semua berita akan segera hadir.')} className="flex items-center text-[#00664f] font-bold hover:text-[#004d3b] transition-colors group bg-white px-6 py-3 rounded-full shadow-sm border border-slate-200">
+                  <button onClick={() => showToast('Halaman semua berita akan segera hadir.')} className="flex items-center text-[#00664f] font-bold hover:text-[#004d3b] transition-colors group bg-white px-6 py-3 rounded-full shadow-sm border border-slate-200 cursor-pointer">
                     Semua Berita <ArrowUpRight className="w-5 h-5 ml-2 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
                   </button>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                  {siteData.berita.map(news => (
+                  {siteData?.berita?.map(news => (
                     <div key={news.id} onClick={() => handleReadNews(news)} className="bg-white rounded-[2rem] overflow-hidden shadow-[0_4px_20px_rgba(0,0,0,0.03)] border border-slate-100 group cursor-pointer hover:-translate-y-2 transition-all duration-300 flex flex-col">
                       <div className="h-56 overflow-hidden relative">
                         <img 
@@ -1415,13 +1434,13 @@ export default function App() {
             <div className="md:col-span-2 space-y-6">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center border border-slate-800">
-                  {siteData.sekolah.logo ? (
-                    <img src={siteData.sekolah.logo} alt="Logo" className="w-8 h-8 object-contain" />
+                  {siteData?.sekolah?.logo ? (
+                    <img src={siteData?.sekolah?.logo} alt="Logo" className="w-8 h-8 object-contain" />
                   ) : (
                     <Shield className="w-5 h-5 text-[#00664f]" />
                   )}
                 </div>
-                <span className="font-black text-xl text-white tracking-tight">{siteData.sekolah.nama}</span>
+                <span className="font-black text-xl text-white tracking-tight">{siteData?.sekolah?.nama}</span>
               </div>
               <p className="text-slate-400 leading-relaxed text-sm max-w-md">
                 Lembaga pendidikan Islam terpadu yang berdedikasi membentuk generasi berilmu pengetahuan, berteknologi, dan berkarakter mulia.
@@ -1429,15 +1448,15 @@ export default function App() {
               <div className="space-y-3 text-sm">
                 <p className="flex items-start gap-3 text-slate-300">
                   <MapPin className="w-5 h-5 text-[#e1ce8c] shrink-0 mt-0.5" />
-                  <span>{siteData.sekolah.alamat}</span>
+                  <span>{siteData?.sekolah?.alamat}</span>
                 </p>
                 <p className="flex items-center gap-3 text-slate-300">
                   <Phone className="w-5 h-5 text-[#e1ce8c] shrink-0" />
-                  <span>{siteData.sekolah.telepon}</span>
+                  <span>{siteData?.sekolah?.telepon}</span>
                 </p>
                 <p className="flex items-center gap-3 text-slate-300">
                   <Mail className="w-5 h-5 text-[#e1ce8c] shrink-0" />
-                  <span>{siteData.sekolah.email}</span>
+                  <span>{siteData?.sekolah?.email}</span>
                 </p>
               </div>
             </div>
@@ -1447,7 +1466,7 @@ export default function App() {
               <ul className="space-y-3 text-sm">
                 {MENU_ITEMS.map((item) => (
                   <li key={item.id}>
-                    <button onClick={() => handleMenuClick(item)} className="hover:text-[#e1ce8c] transition-colors">
+                    <button onClick={() => handleMenuClick(item)} className="hover:text-[#e1ce8c] transition-colors cursor-pointer">
                       {item.label}
                     </button>
                   </li>
@@ -1459,7 +1478,7 @@ export default function App() {
               <h4 className="font-bold text-white mb-6 uppercase tracking-wider text-xs">Akses Khusus</h4>
               <ul className="space-y-3 text-sm mb-6">
                 <li>
-                  <button onClick={() => navigateTo('ppdb')} className="hover:text-[#e1ce8c] transition-colors">
+                  <button onClick={() => navigateTo('ppdb')} className="hover:text-[#e1ce8c] transition-colors cursor-pointer">
                     Pendaftaran PPDB Online
                   </button>
                 </li>
@@ -1478,7 +1497,7 @@ export default function App() {
                     setShowAdminLogin(true);
                   }
                 }}
-                className="inline-flex items-center gap-2 text-xs text-slate-400 hover:text-white bg-slate-900 border border-slate-800 px-4 py-2 rounded-xl transition-all"
+                className="inline-flex items-center gap-2 text-xs text-slate-400 hover:text-white bg-slate-900 border border-slate-800 px-4 py-2 rounded-xl transition-all cursor-pointer"
               >
                 <Lock className="w-3.5 h-3.5 text-[#e1ce8c]" /> Admin Dashboard
               </button>
@@ -1486,7 +1505,7 @@ export default function App() {
           </div>
 
           <div className="pt-8 border-t border-slate-900 flex flex-col md:flex-row justify-between items-center text-xs text-slate-500 gap-4">
-            <p>&copy; {new Date().getFullYear()} {siteData.sekolah.nama}. Hak Cipta Dilindungi.</p>
+            <p>&copy; {new Date().getFullYear()} {siteData?.sekolah?.nama}. Hak Cipta Dilindungi.</p>
             <p className="flex items-center gap-1">
               Dikembangkan dengan penuh dedikasi untuk kemajuan pendidikan Islam.
             </p>
