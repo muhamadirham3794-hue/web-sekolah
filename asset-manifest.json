@@ -1,13 +1,14 @@
 {
   "files": {
     "main.css": "/web-sekolah/static/css/main.5819cf4e.css",
-    "main.js": "/web-sekolah/static/js/main.96db6274.js",
+    "main.js": "/web-sekolah/static/js/main.5e2d97ce.js",
+    "static/media/foto-siswa.jpeg": "/web-sekolah/static/media/foto-siswa.d55ebb0593d6a2ab2d7b.jpeg",
     "index.html": "/web-sekolah/index.html",
     "main.5819cf4e.css.map": "/web-sekolah/static/css/main.5819cf4e.css.map",
-    "main.96db6274.js.map": "/web-sekolah/static/js/main.96db6274.js.map"
+    "main.5e2d97ce.js.map": "/web-sekolah/static/js/main.5e2d97ce.js.map"
   },
   "entrypoints": [
     "static/css/main.5819cf4e.css",
-    "static/js/main.96db6274.js"
+    "static/js/main.5e2d97ce.js"
   ]
 }
