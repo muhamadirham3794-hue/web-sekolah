@@ -192,6 +192,60 @@ const NewsDetail = ({ news, onBack }) => {
   );
 };
 
+const AllNewsList = ({ siteData, onReadNews, onBack }) => {
+  return (
+    <div className="min-h-screen bg-slate-50 pt-32 pb-24 px-4 sm:px-6 relative overflow-hidden">
+      <div className="max-w-7xl mx-auto">
+        <button 
+          onClick={onBack}
+          className="mb-8 text-slate-500 hover:text-[#00664f] font-medium flex items-center gap-2 transition-all group bg-white py-2.5 px-5 rounded-full shadow-sm w-fit border border-slate-100 hover:shadow-md cursor-pointer"
+        >
+          <ChevronRight className="w-4 h-4 rotate-180 group-hover:-translate-x-1 transition-transform" /> 
+          Kembali ke Beranda
+        </button>
+
+        <div className="mb-12">
+          <h2 className="text-3xl md:text-5xl font-black text-slate-900 mb-4">Semua Berita & Pengumuman</h2>
+          <p className="text-slate-600 text-lg">Informasi terbaru dan kegiatan terkini di {siteData?.sekolah?.nama || 'SMP Al-Fathonah Arjasari'}.</p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {siteData?.berita?.map(news => (
+            <div key={news.id} onClick={() => onReadNews(news)} className="bg-white rounded-[2rem] overflow-hidden shadow-[0_4px_20px_rgba(0,0,0,0.03)] border border-slate-100 group cursor-pointer hover:-translate-y-2 transition-all duration-300 flex flex-col">
+              <div className="h-56 overflow-hidden relative">
+                <img 
+                  src={news.image} 
+                  alt={news.title} 
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
+                  loading="lazy" 
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src = "https://images.unsplash.com/photo-1577896851231-70ef18881754?q=80&w=600";
+                  }}
+                />
+                <div className="absolute top-4 left-4 bg-white/95 backdrop-blur-sm text-[#00664f] text-xs font-bold px-4 py-1.5 rounded-full shadow-sm">
+                  {news.category}
+                </div>
+              </div>
+              <div className="p-8 flex-1 flex flex-col">
+                <div className="flex items-center text-slate-400 text-xs font-semibold mb-3 uppercase tracking-wider">
+                  <Calendar className="w-4 h-4 mr-2" /> {news.date}
+                </div>
+                <h3 className="font-bold text-xl text-slate-900 leading-snug group-hover:text-[#00664f] transition-colors line-clamp-3 mb-4">
+                  {news.title}
+                </h3>
+                <div className="mt-auto pt-4 border-t border-slate-50 text-sm font-bold text-[#e1ce8c] flex items-center group-hover:text-[#00664f] transition-colors">
+                  Baca Selengkapnya <ChevronRight className="w-4 h-4 ml-1" />
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const generateRegNo = () => {
   const randomNum = Math.floor(100 + Math.random() * 900);
   return `REG-2026-${randomNum}`;
@@ -1137,6 +1191,8 @@ export default function App() {
           <FormPPDB setCurrentPage={setCurrentPage} siteData={siteData} />
         ) : currentPage === 'news-detail' ? (
           <NewsDetail news={selectedNews} onBack={handleBackToNews} />
+        ) : currentPage === 'all-news' ? (
+          <AllNewsList siteData={siteData} onReadNews={handleReadNews} onBack={() => navigateTo('home')} />
         ) : currentPage === 'admin' && isAdminLoggedIn ? (
           <AdminDashboard siteData={siteData} setSiteData={setSiteData} showToast={showToast} onLogout={() => {setIsAdminLoggedIn(false); navigateTo('home'); showToast('Berhasil Log Out.');}} />
         ) : (
@@ -1385,13 +1441,13 @@ export default function App() {
                     <h2 className="text-sm font-bold text-[#e1ce8c] tracking-widest uppercase mb-3">Informasi Terkini</h2>
                     <h3 className="text-3xl md:text-4xl font-black text-slate-900">Kabar Seputar Sekolah</h3>
                   </div>
-                  <button onClick={() => showToast('Halaman semua berita akan segera hadir.')} className="flex items-center text-[#00664f] font-bold hover:text-[#004d3b] transition-colors group bg-white px-6 py-3 rounded-full shadow-sm border border-slate-200 cursor-pointer">
+                  <button onClick={() => navigateTo('all-news')} className="flex items-center text-[#00664f] font-bold hover:text-[#004d3b] transition-colors group bg-white px-6 py-3 rounded-full shadow-sm border border-slate-200 cursor-pointer">
                     Semua Berita <ArrowUpRight className="w-5 h-5 ml-2 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
                   </button>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                  {siteData?.berita?.map(news => (
+                  {siteData?.berita?.slice(0, 3).map(news => (
                     <div key={news.id} onClick={() => handleReadNews(news)} className="bg-white rounded-[2rem] overflow-hidden shadow-[0_4px_20px_rgba(0,0,0,0.03)] border border-slate-100 group cursor-pointer hover:-translate-y-2 transition-all duration-300 flex flex-col">
                       <div className="h-56 overflow-hidden relative">
                         <img 
